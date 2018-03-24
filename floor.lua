@@ -19,6 +19,7 @@ end
 function Floor:draw()
 	love.graphics.setColor(222, 236, 216)
 	love.graphics.rectangle('fill', self.x, self.y, width, height)
+	love.graphics.setColor(255, 255, 255)
 end
 
 return Floor
