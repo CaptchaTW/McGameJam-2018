@@ -244,6 +244,9 @@ music1:setVolume(0.8)
 
 		self.dying = true
 
+		self.timer:tween(3.4, self.game.backgroundcolor, {r = 21, g = 18, b = 32}, 'linear')
+
+
 	self.timer:after(0.5, function() 
 		self.img = trs_img 
 		self.anim = trs_anim
@@ -253,7 +256,7 @@ music1:setVolume(0.8)
 		self.anim:resume()
 		self.timer:after(3.4, function()
 			MonsterThree:new(self.game, self.world, self.x, self.y)
-			love.graphics.setBackgroundColor(21, 18, 32)
+			
 			music1:stop()
 			music1: setVolume(1)
 			music2:play()
