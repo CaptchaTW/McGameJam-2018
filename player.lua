@@ -339,6 +339,7 @@ function OnGround:jump()
 		self:gotoState(nil)
 		self.anim = jump_anim 
 		self.img = jump_img 
+		jumpsound:play()
 		self.anim:gotoFrame(1)
 		self.anim:resume()
 end

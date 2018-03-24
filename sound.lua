@@ -1,7 +1,9 @@
 music = love.audio.newSource("cute2.mp3")
 music1 = love.audio.newSource("poop2.mp3")
 
---music:play()
+jumpsound = love.audio.newSource("jump1.wav")
+
+
 
 --music:setLooping(true)--need actual loop condition for new boss appears or smthing
 --music:setPitch(love.math.random()) --for sound effects
