@@ -106,6 +106,10 @@ function Camera:update(dt)
 	self.timer:update(dt)
 end
 
+local sortByDrawOrder = function(a,b)
+	return a:getDrawOrder() > b:getDrawOrder()
+end
+
 
 local tempcanvas = love.graphics.newCanvas()
 function Camera:draw( entities, lights, debug)
@@ -121,7 +125,10 @@ function Camera:draw( entities, lights, debug)
 
 	lg.translate(self.Gx + self.Ox, self.Gy + self.Oy)
 	
+
 	local visibleThings, len = self.world:queryRect(x,y,w,h)
+		table.sort(visibleThings, sortByDrawOrder)
+
   for i=1, len do
     visibleThings[i]:draw(dt)
   end
