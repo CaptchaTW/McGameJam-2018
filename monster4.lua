@@ -27,7 +27,7 @@ local jumpSpeed = -200
 
 local img = love.graphics.newImage('sprites/fourthformblink.png')
 local grid = anim8.newGrid(128, 128, img:getWidth(), img:getHeight())
-local anim = anim8.newAnimation(grid('1-9', 1), 0.1, 'pauseAtEnd')
+local anim = anim8.newAnimation(grid(1, '1-9'), 0.1, 'pauseAtEnd')
 
 local dmg_img = love.graphics.newImage('sprites/fourthformcrouch.png')
 local dmg_grid = anim8.newGrid(128, 128, dmg_img:getWidth(), dmg_img:getHeight())
