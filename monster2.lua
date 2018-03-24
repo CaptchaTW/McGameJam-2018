@@ -256,7 +256,7 @@ music1:setVolume(0.8)
 		self.anim:gotoFrame(1)
 		self.anim:resume()
 		self.timer:after(3.4, function()
-			MonsterThree:new(self.game, self.world, self.x, self.y)
+			MonsterThree:new(self.game, self.world, self.x, self.y-36)
 			
 			music1:stop()
 			music1: setVolume(1)
