@@ -4,8 +4,8 @@ local game
 
 
 function love.load()
-		love.graphics.setDefaultFilter("nearest", "nearest")
-		game = Game:new(width, height)
+	love.graphics.setDefaultFilter("nearest", "nearest")
+	game = Game:new(width, height)
 end
 
 function love.resize(w, h)

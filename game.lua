@@ -1,12 +1,21 @@
 local class = require 'lib.middleclass'
+local bump = require 'lib.bump'
 
-local Bump = require 'lib.bump'
+local Floor = require 'floor'
 
+local Player = require 'player'
+local Floor = require 'floor'
+local RedFloor = require 'redfloor'
+
+
+x,y,w,h = 0,0,10000,10000
 
 local Game = class('Game')
 
 function Game:initialize()
-  self.world  = Bump.newWorld()
+  self.world  = bump.newWorld()
+  self.player = Player:new(self.world, 0,0)
+  self.floor = Floor:new(self.world, 0, 500)
 end
 
 
@@ -48,6 +57,8 @@ function Game:keypressed(key)
 	if key == 'escape' then 
 		self:exit()
 	end
+
+	self.player:keypressed(key)
 
 end
 
