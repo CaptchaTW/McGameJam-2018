@@ -381,6 +381,7 @@ end
 local Rolling = Player:addState('Rolling')
 
 function Rolling:enteredState()
+	self.passable = true
 	self.anim = roll_anim
 	self.img = roll_img
 	self.anim:gotoFrame(1)
@@ -391,6 +392,12 @@ end
 function Rolling:checkOnGround()
 end
 
+function Rolling:filter(other)
+	if other.damaging or other. passable then return false 
+	else
+		return 'slide'
+	end
+end
 function Rolling:jump()
 		self.dy = jumpSpeed
 		self:gotoState(nil)
@@ -414,6 +421,8 @@ function Rolling:applyMovement()
 end
 
 function Rolling:exitedState()
+	self.passable = false
+
 end
 
 return Player
