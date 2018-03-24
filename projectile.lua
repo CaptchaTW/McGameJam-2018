@@ -15,6 +15,7 @@ function Projectile:initialize( world, x, y, dx, dy, type)
 	self.y = y
 	self.dx = dx or 0
 	self.dy = dy or 0
+	self.damaging = true
 	self.timer = Timer()
 
   self.timer:after(10, function() self:destroy() self.dying = true end)
@@ -23,7 +24,7 @@ end
 function Projectile:moveCollision(dt)
 
 	if self.dying then return false end 
-	
+
 	local world = self.world
 	local tx = self.x + self.dx * dt
 	local ty = self.y + self.dy * dt 

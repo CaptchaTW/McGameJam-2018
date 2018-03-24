@@ -37,6 +37,7 @@ function MonsterOne:initialize(game, world, x,y)
   self.img = img 
   self.anim = anim
   self.enemy = true
+  self.damaging = true
   self.world = world
   self.timer = Timer()
   self.timer:every(4, function() 
