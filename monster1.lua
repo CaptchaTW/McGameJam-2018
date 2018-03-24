@@ -188,7 +188,7 @@ function OnHit:enteredState()
 		self.anim:resume()
 		self.timer:after(2.1, function()
 			MonsterTwo:new(self.game, self.world, self.x, self.y)
-			
+			love.graphics.setBackgroundColor(116, 92, 116)
 			music:setVolume(1)
 			music1:setLooping(true)
 			self:destroy()

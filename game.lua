@@ -6,7 +6,7 @@ local Floor = require 'floor'
 
 local Player = require 'player'
 local Floor = require 'floor'
-local MonsterOne = require 'monster3'
+local MonsterOne = require 'monster1'
 
 require'sound'
 x,y,w,h = -10000, -10000,20000,20000
@@ -43,6 +43,7 @@ function Game:reset()
 	end
 
   self.monster = MonsterOne:new(self, self.world, 100, 100)
+  love.graphics.setBackgroundColor(162, 221, 232)
   music:play()
   music:setLooping(true)
 
@@ -83,6 +84,7 @@ function Game:update(dt)
 	self.camera:setCenter(targetx, 130)
 
   local visibleThings, len = self.world:queryRect(x,y,w,h)
+
 
   for i=1, len do
     visibleThings[i]:update(dt)
