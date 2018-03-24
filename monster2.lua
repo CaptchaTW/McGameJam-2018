@@ -10,7 +10,7 @@ local Projectile = require 'projectile'
 local MonsterTwo = class('MonsterTwo', Entity)
 MonsterTwo:include(Stateful)
 
-local width, height = 10, 5
+local width, height = 10, 16
 local friction = 0.00005
 
 local hspeed = 20
@@ -20,7 +20,7 @@ local jumpSpeed = -200
 
 local img = love.graphics.newImage('sprites/secondformattack.png')
 local grid = anim8.newGrid(16, 16, img:getWidth(), img:getHeight())
-local anim = anim8.newAnimation(grid(1, '1-9'), 0.2, 'pauseAtEnd')
+local anim = anim8.newAnimation(grid(1, '1-9'), 0.1, 'pauseAtEnd')
 
 local dmg_img = love.graphics.newImage('sprites/secondformtorpedo.png')
 local dmg_grid = anim8.newGrid(16, 16, dmg_img:getWidth(), dmg_img:getHeight())
@@ -36,8 +36,10 @@ function MonsterTwo:initialize(game, world, x,y)
   self.enemy = true
   self.world = world
   self.timer = Timer()
+  self.damaging = true
  	self.particles = Particles:new(self.x, self.y)
  	self:gotoState('Prepare')
+ 	self.Sy = 1
 end
 
 function MonsterTwo:AI(dt)
@@ -81,6 +83,12 @@ function MonsterTwo:moveCollision(dt)
 
 	self.x, self.y = rx, ry
 
+ 		if self.game.player.x > self.x then 
+ 			self.Sx = 1
+ 		else
+ 			self.Sx = -1
+ 		end
+
 end
 
 function MonsterTwo:update(dt)
@@ -94,9 +102,9 @@ function MonsterTwo:update(dt)
 end
 
 function MonsterTwo:draw()
---	love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
+-- 	love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
 	self.particles:draw()
-	self.anim:draw(self.img, self.x+4, self.y, 0, self.Sx, 1, 8, 11)
+	self.anim:draw(self.img, self.x+5, self.y, 0, self.Sx, self.Sy, 9, 0)
 end
 
 local Torpedo = MonsterTwo:addState('Torpedo')
@@ -108,6 +116,8 @@ function Torpedo:enteredState()
   self.anim:resume()
   self.dy = 200 
   self.dx = 0
+  self.damaging = true
+  self.timer:tween(0.2, self, {Sy = 1.5}, 'linear')
 end
 
 function Torpedo:update(dt)
@@ -130,7 +140,7 @@ function Torpedo:checkOnGround(ny)
 		Dust:new(self.world, x, y)
 		Projectile:new(self.world, x, y, 100)
 		Projectile:new(self.world, x, y, -100)
-
+		self.Sy = 1
 	end
 end
 
@@ -139,7 +149,9 @@ local Prepare = MonsterTwo:addState('Prepare')
 function Prepare:enteredState()
 	self.img = img 
   self.anim = anim
- 	self.timer:after(1, function() 
+  self.anim:gotoFrame(1)
+  self.anim:resume()
+ 	self.timer:after(0.8, function() 
  		if self.game.player.x > self.x then 
  			self.dx = 100 
  		else
@@ -152,6 +164,10 @@ end
 function Prepare:checkOnGround(ny)
 	if ny < 0 and self.dx ~= 0 then 
 		self:gotoState('Torpedo')
+	end
+
+	if ny < 0 then 
+		self.Sy = 1
 	end
 end
 
@@ -178,10 +194,11 @@ function OnHit:enteredState()
 	self.img = dmg_img
 	self.anim = dmg_anim
 	self.timer:after(0.5, function() 
-		self.img = trs_img 
-		self.anim = trs_anim
+--		self.img = trs_img 
+--		self.anim = trs_anim
 		self.timer:after(2.1, function()
-			MonsterTwo:new(self.world, self.x, self.y)
+			MonsterTwo:new(self.game, self.world, self.x, self.y)
+			self:destroy()
 			end)
 	  end)
 end

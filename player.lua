@@ -45,8 +45,9 @@ local jumpEndSpeed = -20
 	local slash_anim = anim8.newAnimation(slash_grid('1-4', 1), 0.1)
 	local slash_anim2 = anim8.newAnimation(slash_grid('1-4', 2), 0.1)
 
-function Player:initialize(world, x,y)
+function Player:initialize(game, world, x,y)
   Entity.initialize(self, world, x, y, width, height)
+  self.game = game
   self.world = world
 	self.anim = jump_anim
 	self.img = jump_img
@@ -157,7 +158,7 @@ end
 
 function Player:filter(other)
 	if other.passable then 
-		return false 
+		return 'cross'
 	else
 		return 'slide'
 	end
@@ -175,6 +176,7 @@ function Player:moveCollision(dt)
 		local col = cols[i]
 
 		if col.other.damaging then 
+			self:die()
 		end
 
 		self:checkOnGround(col.normal.y) 
@@ -216,6 +218,10 @@ function Player:draw()
 --	love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
 --	love.graphics.rectangle('line', x, y-9, 16, 12)
 
+end
+
+function Player:die()
+	self.game:reset()
 end
 
 local OnGround = Player:addState('OnGround')

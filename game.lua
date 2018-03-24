@@ -17,12 +17,16 @@ local Game = class('Game')
 
 function Game:initialize(width, height)
 	love.window.setMode(width, height, {resizable = true})
+	self:reset()
+end
 
-  self.world  = bump.newWorld()
+function Game:reset()
+	self.world  = bump.newWorld()
   self.camera = Camera:new(self.world, 0,0, width, height)
-  self.player = Player:new(self.world, 0,0)
+  self.player = Player:new(self, self.world, 0,0)
   self.floor = Floor:new(self.world, 0, 150)
   self.monster = MonsterOne:new(self, self.world, 100, 100)
+  self.camera:resize(love.graphics.getWidth(), love.graphics.getHeight())
 end
 
 
