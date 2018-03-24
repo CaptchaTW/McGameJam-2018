@@ -124,7 +124,7 @@ end
 function Player:attack()
 
 	if self.attacking then return false end
-slashsound: setPitch(0.9 + math.random()/2)
+	slashsound: setPitch(0.9 + math.random()/2)
 	slashsound:play() 
 	
 	slash_anim:gotoFrame(1)
@@ -287,6 +287,7 @@ end
 
 function Player:die()
 
+	splatter: setPitch(0.9 + math.random()/2)
 	splatter:play()
 
 	if self.dying then return false end 
@@ -341,6 +342,7 @@ function OnGround:jump()
 		self:gotoState(nil)
 		self.anim = jump_anim 
 		self.img = jump_img 
+		jumpsound: setPitch(0.9 + math.random()/2)
 		jumpsound:play()
 		self.anim:gotoFrame(1)
 		self.anim:resume()
@@ -387,6 +389,7 @@ end
 local Rolling = Player:addState('Rolling')
 
 function Rolling:enteredState()
+	roll: setPitch(0.9 + math.random()/2)
 	roll:play()
 	self.passable = true
 	self.anim = roll_anim

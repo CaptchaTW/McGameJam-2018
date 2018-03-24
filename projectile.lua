@@ -8,6 +8,10 @@ local lazerimg = love.graphics.newImage('sprites/lazer.png')
 local grid = anim8.newGrid(1000, 60, lazerimg:getWidth(), lazerimg:getHeight())
 local lazeranim = anim8.newAnimation(grid(1, '1-4'), 0.1)
 
+local vineimg = love.graphics.newImage('sprites/fourthformvine.png')
+local vinegrid = anim8.newGrid(32, 128, vineimg:getWidth(), vineimg:getHeight())
+ 
+
 local Projectile = class ("Projectile", Entity)
 
 
@@ -23,8 +27,15 @@ function Projectile:initialize( world, x, y, w, h, dx, dy, type)
 	self.type = type
 
 	if self.type == 'lazer' then
-			self.timer:after(0.4, function() self:destroy() self.dying = true end)
-			self.anim = lazeranim
+		self.timer:after(0.4, function() self:destroy() self.dying = true end)
+		self.anim = lazeranim
+	elseif self.type == 'vine' then 
+		self.damaging = false
+		self.anim = anim8.newAnimation(vinegrid('1-11', 1), 0.1)
+		self.anim:gotoFrame(1)
+		self.timer:after(0.2, function() self.damaging = true self.passable = true end)
+		self.timer:after(0.8, function() self.damaging = false self.passable = false end)
+		self.timer:after(1.1, function() self:destroy() self.dying = true end)
 	else
   	self.timer:after(10, function() self:destroy() self.dying = true end)
   end
@@ -63,6 +74,8 @@ function Projectile:draw(debug)
 
 	if self.type == 'lazer' then 
 		self.anim:draw(lazerimg, self.x, self.y-30)
+	elseif self.type == 'vine' then
+		self.anim:draw(vineimg, self.x-18, self.y)
 	else
 		love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
 	end
