@@ -125,7 +125,6 @@ function Player:update(dt)
 	self:applyGravity(dt)
 	self:applyMovement(dt)
 	self:moveCollision(dt)
-	self.anim:update(dt)
 end
 
 function Player:draw()
