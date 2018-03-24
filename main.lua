@@ -1,10 +1,11 @@
+	love.graphics.setDefaultFilter("nearest", "nearest")
 local Game = require 'game'
 
 local game 
 
 
 function love.load()
-	love.graphics.setDefaultFilter("nearest", "nearest")
+
 	game = Game:new(width, height)
 end
 

@@ -1,6 +1,7 @@
 local Entity = require 'entity'
 local class = require 'lib.middleclass'
 local Timer = require 'lib.timer'
+local anim8 = require 'lib.anim8'
 
 local MonsterOne = class('MonsterOne', Entity)
 
@@ -12,8 +13,15 @@ local haccel = 500
 
 local jumpSpeed = -200
 
+local img = love.graphics.newImage('sprites/firstform.png')
+local grid = anim8.newGrid(16, 16, img:getWidth(), img:getHeight())
+local anim = anim8.newAnimation(grid('1-3', 1), 0.1)
+
 function MonsterOne:initialize(world, x,y)
   Entity.initialize(self, world, x, y, width, height)
+
+  self.img = img 
+  self.anim = anim
   self.world = world
   self.timer = Timer()
   self.timer:every(4, function() 
@@ -42,13 +50,13 @@ function MonsterOne:applyMovement(dt)
 			if dx > -hspeed  then 
 				dx = dx - haccel * dt
 			end
-			self.Sx = -1 
+			self.Sx = 1 
 		end
 		if self.rightKey then
 			if dx < hspeed  then
 				dx = dx + haccel * dt
 			end
-			self.Sx = 1
+			self.Sx = -1
 		end
 
 		self.dx, self.dy = dx, dy
@@ -90,10 +98,12 @@ function MonsterOne:update(dt)
 	self:applyGravity(dt)
 	self:applyMovement(dt)
 	self:moveCollision(dt)
+	self.anim:update(dt)
 end
 
 function MonsterOne:draw()
-	love.graphics.rectangle('fill', self.x, self.y, width, height)
+
+	self.anim:draw(self.img, self.x, self.y, 0, self.Sx, 1, 8, 6)
 end
 
 return MonsterOne

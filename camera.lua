@@ -122,7 +122,6 @@ function Camera:draw( entities, lights, debug)
 	lg.translate(self.Gx, self.Gy)
 	
 	local visibleThings, len = self.world:queryRect(x,y,w,h)
-
   for i=1, len do
     visibleThings[i]:draw(dt)
   end
@@ -136,7 +135,6 @@ function Camera:draw( entities, lights, debug)
 	lg.translate(self.Wx, self.Wy)
 	lg.scale(self.WScale or 1, self.WScale or 1)
 	lg.setCanvas(current_canvas)
-
 	lg.draw(tempcanvas)
 
 	lg.pop()

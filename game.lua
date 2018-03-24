@@ -11,7 +11,7 @@ local MonsterOne = require 'monster1'
 
 x,y,w,h = -10000, -10000,20000,20000
 
-width, height = 384, 216
+width, height = 192, 108
 
 local Game = class('Game')
 
@@ -22,7 +22,7 @@ function Game:initialize(width, height)
   self.camera = Camera:new(self.world, 0,0, width, height)
   self.player = Player:new(self.world, 0,0)
   self.floor = Floor:new(self.world, 0, 150)
-  self.monster = MonsterOne:new(self.world, 500, 100)
+  self.monster = MonsterOne:new(self.world, 100, 100)
 end
 
 
@@ -45,15 +45,15 @@ local targetx = 0
 function Game:update(dt)
 
 	if self.player.x - targetx > 20 then 
-		targetx = targetx +  (self.player.x -22 - targetx) * 0.8 * dt
+		targetx = targetx +  (self.player.x -22 - targetx) * 0.99 * dt
 	end
 
 	if self.player.x - targetx < -20 then 
-		targetx = targetx + (self.player.x +22 - targetx) * 0.8 *dt
+		targetx = targetx + (self.player.x +22 - targetx) * 0.99 *dt
 	end
 
 
-	self.camera:setCenter(targetx, 100)
+	self.camera:setCenter(targetx, 130)
 
   local visibleThings, len = self.world:queryRect(x,y,w,h)
 
@@ -77,7 +77,7 @@ function Game:keypressed(key)
 end
 
 function Game:keyreleased(key)
-
+	self.player:keyreleased(key)
 end
 
 return Game
