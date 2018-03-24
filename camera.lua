@@ -111,7 +111,7 @@ local sortByDrawOrder = function(a,b)
 end
 
 
-local tempcanvas = love.graphics.newCanvas()
+local tempcanvas = love.graphics.newCanvas(384, 216)
 function Camera:draw( entities, lights, debug)
 	lg = love.graphics
 	local current_canvas = lg.getCanvas()
