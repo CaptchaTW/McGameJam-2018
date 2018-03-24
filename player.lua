@@ -65,6 +65,11 @@ function Player:keypressed(key)
 	if key == 'j' then
 		self:roll()
 	end
+
+	if key == 'k' then 
+		self:attack()
+	end
+
 end
 
 function Player:jump()
