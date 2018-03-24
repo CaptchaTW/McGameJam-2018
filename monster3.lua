@@ -8,13 +8,11 @@ local Dust = require 'landingdust'
 local Projectile = require 'projectile'
 local Weakpoint = require 'weakpoint'
 local Debris = require 'debris'
+local MonsterFour = require 'monster3'
 
 local debris1 = love.graphics.newImage('sprites/debris1.png')
 local debris2 = love.graphics.newImage('sprites/debris2.png')
 local debris3 = love.graphics.newImage('sprites/debris3.png')
-
-
-
 
 local MonsterThree = class('MonsterThree', Entity)
 MonsterThree:include(Stateful)
@@ -149,9 +147,9 @@ function Pause:enteredState()
 	self.dx = 0
 	self.dy= 0
 	if math.random(1 , 10) > 2   then 
-		self.timer:after(math.random(5,10)/10, function() self:gotoState('Lazer') end)
+		self.timer:after(math.random(5,13)/10, function() self:gotoState('Lazer') end)
 	else
-		self.timer:after(math.random(5,10)/10, function() self:gotoState('Prepare') end)
+		self.timer:after(math.random(5,13)/10, function() self:gotoState('Prepare') end)
 	end
 end
 
@@ -231,6 +229,7 @@ function OnHit:enteredState()
 		self.anim:gotoFrame(1)
 		self.anim:resume()
 		self.timer:after(3.4, function()
+			MonsterFour:new(self.game, self.world, self.x, self.y)
 			self:destroy()
 			end)
 	  end)
