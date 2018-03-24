@@ -12,6 +12,7 @@ local MonsterOne = require 'monster1'
 x,y,w,h = -10000, -10000,20000,20000
 
 width, height = 384, 216
+floor_x,floor_y = -10000,225
 
 local Game = class('Game')
 
