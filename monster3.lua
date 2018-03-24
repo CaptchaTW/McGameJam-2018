@@ -19,12 +19,12 @@ local haccel = 500
 local jumpSpeed = -200
 
 local img = love.graphics.newImage('sprites/thirdformattack.png')
-local grid = anim8.newGrid(32, 57, img:getWidth(), img:getHeight())
+local grid = anim8.newGrid(38, 56, img:getWidth(), img:getHeight())
 local anim = anim8.newAnimation(grid('1-10', 1), 0.1, 'pauseAtEnd')
 
----local dmg_img = love.graphics.newImage('sprites/thirsformlazer.png')
---local dmg_grid = anim8.newGrid(16, 16, dmg_img:getWidth(), dmg_img:getHeight())
---local dmg_anim = anim8.newAnimation(dmg_grid(1, 1), 0.1, 'pauseAtEnd')
+local dmg_img = love.graphics.newImage('sprites/thirdformcharge.png')
+local dmg_grid = anim8.newGrid(40, 56, dmg_img:getWidth(), dmg_img:getHeight())
+local dmg_anim = anim8.newAnimation(dmg_grid('1-17', 1), 0.1, 'pauseAtEnd')
 
 
 function MonsterTwo:initialize(game, world, x,y)
@@ -88,9 +88,9 @@ function MonsterTwo:moveCollision(dt)
 	self.x, self.y = rx, ry
 
  		if self.game.player.x > self.x then 
- 			self.Sx = 1
- 		else
  			self.Sx = -1
+ 		else
+ 			self.Sx = 1
  		end
 
 end
@@ -108,45 +108,30 @@ end
 function MonsterTwo:draw()
  	love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
 	self.particles:draw()
-	self.anim:draw(self.img, self.x+5, self.y, 0, self.Sx, self.Sy, 9, 0)
+	self.anim:draw(self.img, self.x+5, self.y, 0, self.Sx, self.Sy, 16, 0)
 end
 
-local Torpedo = MonsterTwo:addState('Torpedo')
+local Lazer = MonsterTwo:addState('Lazer')
 
-function Torpedo:enteredState()
---  self.img = dmg_img 
---  self.anim = dmg_anim
---  self.anim:gotoFrame(1)
-  self.anim:resume()
-  self.dy = 200 
-  self.dx = 0
-  self.damaging = true
-  self.timer:tween(0.2, self, {Sy = 1.5}, 'linear')
+function Lazer:enteredState()
+	self.dx = 0
+	self.dy = 0
+	self.img = dmg_img 
+  self.anim = dmg_anim
+  self.anim:gotoFrame(1)
+  self.timer:after(1.7, function() self:gotoState('Pause') self.x = self.x + 2*self.Sx end)
 end
 
-function Torpedo:update(dt)
-	local x, y = self:getCenter()
-	self.particles:emit(1, x, y)
-	self.particles:update(dt)
-	self.timer:update(dt)
-	self:AI(dt)
-	self:applyGravity(dt)
-	self:applyMovement(dt)
-	self:moveCollision(dt)
-	self.anim:update(dt)
-end
 
-function Torpedo:checkOnGround(ny, other)
-	if ny < 0 then 
+local Pause = MonsterTwo:addState('Pause')
 
-			self:gotoState('Prepare')
-
-			self.game.camera:screenShake(0.1, 5,5)
-			local x,y = self:getCenter()
-			Dust:new(self.world, x, y, 'impact')
-			Projectile:new(self.world, x, y, 100)
-			Projectile:new(self.world, x, y, -100)
-			self.Sy = 1
+function Pause:enteredState()
+	self.dx = 0
+	self.dy= 0
+	if math.random() > 0.5 then 
+		self.timer:after(math.random(1,4), function() self:gotoState('Lazer') end)
+	else
+		self.timer:after(math.random(1,4), function() self:gotoState('Prepare') end)
 	end
 end
 
@@ -160,39 +145,20 @@ function Prepare:enteredState()
   self.anim:resume()
  	self.timer:after(0.8, function() 
  		if self.game.player.x > self.x then 
- 			self.dx = 100 
+ 			self.dx = 200 
  		else
- 			self.dx = - 100
+ 			self.dx = - 200
  		end
- 		self.dy = -150 - math.random(0,100)
- 	end)
+	end)
+ self.timer:after(math.random(10, 15)/10, function() self:gotoState('Pause') end)
+
 end
 
 function Prepare:checkOnGround(ny)
-	if ny < 0 and self.dx ~= 0 then 
-		self:gotoState('Torpedo')
-	end
-
-	if ny < 0 then 
-		self.Sy = 1
-	end
 end
 
 function Prepare:AI()
- 		if math.abs(self.x - self.game.player.x) < 5 and self.y < self.game.player.y then 
- 			self:gotoState('Stop')
- 		end
-end
 
-local Stop = MonsterTwo:addState('Stop')
-
-function Stop:enteredState()
-	self.dx = 0
-	self.dy = 0 
-	self.timer:after(0.2, function() self:gotoState('Torpedo') end)
-end
-
-function Stop:applyGravity()
 end
 
 local OnHit = MonsterTwo:addState('OnHit')

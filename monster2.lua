@@ -99,9 +99,9 @@ function MonsterTwo:moveCollision(dt)
 	self.x, self.y = rx, ry
 
  		if self.game.player.x > self.x then 
- 			self.Sx = 1
- 		else
  			self.Sx = -1
+ 		else
+ 			self.Sx = 1
  		end
 
 end
