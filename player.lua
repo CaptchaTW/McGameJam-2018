@@ -45,7 +45,7 @@ local jumpEndSpeed = -20
 
 	local idle_anim = anim8.newAnimation(idle_grid(1, 1), 1, "pauseAtEnd")
 	local run_anim = anim8.newAnimation(run_grid(1, '1-7'), 0.1)
-	local roll_anim = anim8.newAnimation(roll_grid(1, '1-6'), 0.1)
+	local roll_anim = anim8.newAnimation(roll_grid('1-5', 1), 0.1)
 	local jump_anim = anim8.newAnimation(jump_grid(1, '1-5'), 0.15, "pauseAtEnd")
 	local slash_anim = anim8.newAnimation(slash_grid('1-4', 1), 0.1)
 	local slash_anim2 = anim8.newAnimation(slash_grid('1-4', 2), 0.1)
@@ -315,7 +315,7 @@ function Player:die()
 
 	self.game.camera:screenShake(0.1, 5,5)
 
-	self.timer:after(1, function() self.game:reset() end)
+	self.timer:after(1, function() love.audio.stop( )self.game:reset() end)
 end
 
 local OnGround = Player:addState('OnGround')
@@ -339,6 +339,7 @@ function OnGround:jump()
 		self:gotoState(nil)
 		self.anim = jump_anim 
 		self.img = jump_img 
+		jumpsound:play()
 		self.anim:gotoFrame(1)
 		self.anim:resume()
 end
@@ -384,6 +385,7 @@ end
 local Rolling = Player:addState('Rolling')
 
 function Rolling:enteredState()
+	roll:play()
 	self.passable = true
 	self.anim = roll_anim
 	self.img = roll_img

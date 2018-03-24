@@ -146,7 +146,14 @@ local OnHit = MonsterOne:addState('OnHit')
 
 function OnHit:enteredState()
 	local x, y = self:getCenter()
-
+		
+	music:setVolume(0.8)	
+	music:setVolume(0.7)	
+	music:setVolume(0.6)	
+	music:setVolume(0.5)	
+	music:setVolume(0.4)	
+	music:setVolume(0.3)	
+	music:setVolume(0.2)	
 	Debris:new(self, self.world, x, y, debris1, 200)
 	Debris:new(self, self.world, x, y, debris1, 200)
 	Debris:new(self, self.world, x, y, debris2, 200)
@@ -176,9 +183,14 @@ function OnHit:enteredState()
 		self.img = trs_img 
 		self.anim = trs_anim
 		self.anim:gotoFrame(1)
+		music:stop()
+			music1:play()
 		self.anim:resume()
 		self.timer:after(2.1, function()
 			MonsterTwo:new(self.game, self.world, self.x, self.y)
+			
+			music:setVolume(1)
+			music1:setLooping(true)
 			self:destroy()
 			end)
 	  end)

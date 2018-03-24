@@ -3,22 +3,31 @@ local Entity = require 'entity'
 local anim8 = require 'lib.anim8'
 local Timer = require 'lib.timer'
 
+
+local lazerimg = love.graphics.newImage('sprites/lazer.png')
+local grid = anim8.newGrid(1000, 60, lazerimg:getWidth(), lazerimg:getHeight())
+local lazeranim = anim8.newAnimation(grid(1, '1-4'), 0.1)
+
 local Projectile = class ("Projectile", Entity)
 
 
-local w = 8
-local h = 8
-
-function Projectile:initialize( world, x, y, dx, dy, type)
+function Projectile:initialize( world, x, y, w, h, dx, dy, type)
   Entity.initialize(self, world, x, y, w, h)
 	self.x = x 
 	self.y = y
 	self.dx = dx or 0
 	self.dy = dy or 0
 	self.damaging = true
+	self.projectile = true
 	self.timer = Timer()
+	self.type = type
 
-  self.timer:after(10, function() self:destroy() self.dying = true end)
+	if self.type == 'lazer' then
+			self.timer:after(0.4, function() self:destroy() self.dying = true end)
+			self.anim = lazeranim
+	else
+  	self.timer:after(10, function() self:destroy() self.dying = true end)
+  end
 end
 
 function Projectile:moveCollision(dt)
@@ -47,10 +56,17 @@ end
 function Projectile:update(dt)
 	self.timer:update(dt)
 	self:moveCollision(dt)
+	if self.anim then self.anim:update(dt) end
 end
 
 function Projectile:draw(debug)
-	love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
+
+	if self.type == 'lazer' then 
+		self.anim:draw(lazerimg, self.x, self.y-30)
+	else
+		love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
+	end
+
 end
 
 return  Projectile

@@ -151,12 +151,12 @@ function Torpedo:checkOnGround(ny, other)
 	if ny < 0 then 
 
 			self:gotoState('Prepare')
-
+			boom:play()
 			self.game.camera:screenShake(0.1, 5,5)
 			local x,y = self:getCenter()
 			Dust:new(self.world, x, y, 'impact')
-			Projectile:new(self.world, x, y, 100)
-			Projectile:new(self.world, x, y, -100)
+			Projectile:new(self.world, x, y, 8, 8,  100)
+			Projectile:new(self.world, x, y, 8, 8, -100)
 			self.Sy = 1
 	end
 end
@@ -210,7 +210,13 @@ local OnHit = MonsterTwo:addState('OnHit')
 
 function OnHit:enteredState()
 	local x, y = self:getCenter()
-
+music1:setVolume(0.8)	
+	music1:setVolume(0.7)	
+	music1:setVolume(0.6)	
+	music1:setVolume(0.5)	
+	music1:setVolume(0.4)	
+	music1:setVolume(0.3)	
+	music1:setVolume(0.2)	
 	Debris:new(self, self.world, x, y, debris1, 200)
 	Debris:new(self, self.world, x, y, debris1, 200)
 	Debris:new(self, self.world, x, y, debris2, 200)
@@ -247,6 +253,10 @@ function OnHit:enteredState()
 		self.anim:resume()
 		self.timer:after(3.4, function()
 			MonsterThree:new(self.game, self.world, self.x, self.y)
+			music1:stop()
+			music1: setVolume(1)
+			music2:play()
+			music2:setLooping(true)
 			self:destroy()
 			end)
 	  end)

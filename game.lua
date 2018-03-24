@@ -6,7 +6,7 @@ local Floor = require 'floor'
 
 local Player = require 'player'
 local Floor = require 'floor'
-local MonsterOne = require 'monster1'
+local MonsterOne = require 'monster3'
 
 require'sound'
 x,y,w,h = -10000, -10000,20000,20000
@@ -43,6 +43,11 @@ function Game:reset()
 	end
 
   self.monster = MonsterOne:new(self, self.world, 100, 100)
+  music:play()
+  music:setLooping(true)
+
+music:play()
+music:setLooping(true)
   self.camera:resize(love.graphics.getWidth(), love.graphics.getHeight())
 end
 
