@@ -6,6 +6,11 @@ local Stateful = require 'lib.stateful'
 
 local Dust = require 'landingdust'
 local Particles = require 'particles'
+local Debris = require 'debris'
+
+local debris1 = love.graphics.newImage('sprites/debris1.png')
+local debris2 = love.graphics.newImage('sprites/debris2.png')
+local debris3 = love.graphics.newImage('sprites/debris3.png')
 
 
 local Player = class('Player', Entity)
@@ -52,23 +57,28 @@ function Player:initialize(game, world, x,y)
 	self.anim = jump_anim
 	self.img = jump_img
 	self.timer = Timer()
+	self.player = true
 	self.Sx = 1
+	self.movable = true
 	self.particles = Particles:new(self.x, self.y)
+	self.drawOrder = 0
 end
 
 
 function Player:input()
-	self.leftKey = love.keyboard.isDown('a') 
-	self.rightKey = love.keyboard.isDown('d')
-	self.upKey = love.keyboard.isDown('w')
-	self.downKey = love.keyboard.isDown('s')
-	self.jumpKey = love.keyboard.isDown('space')
-	self.rollKey = love.keyboard.isDown('j')
+	if self.movable then 
+		self.leftKey = love.keyboard.isDown('a') 
+		self.rightKey = love.keyboard.isDown('d')
+		self.upKey = love.keyboard.isDown('w')
+		self.downKey = love.keyboard.isDown('s')
+		self.jumpKey = love.keyboard.isDown('space')
+		self.rollKey = love.keyboard.isDown('j')
+	end
 end
 
 
 function Player:applyMovement(dt)
-
+	if self.movable then
 			local dx, dy = self.dx, self.dy
 
 			if self.leftKey then
@@ -86,10 +96,7 @@ function Player:applyMovement(dt)
 
 			self.dx, self.dy = dx, dy
 
-			if not (self.leftKey or self.rightKey) then
-				self.dx = self.dx * math.pow(friction, dt)
-			end
-	
+	end
 end
 
 
@@ -119,22 +126,71 @@ function Player:attack()
 	if self.attacking then return false end
 
 	slash_anim:gotoFrame(1)
+	self.timer:after(0.1, function() 
+
+		local x, y = self:getCenter()
+		local things, len
+		if self.Sx > 0 then 
+		 	things, len = self.world:queryRect(x, y-9, 16, 12)
+		 	for i=1, len do
+		 		if things[i].hit then
+		 			things[i]:hit()
+		 		end
+			end
+
+		else
+			things, len = self.world:queryRect(x-16, y-9, 16, 12)
+			for i=1, len do
+		 		if things[i].hit then
+		 			things[i]:hit()
+		 		end
+			end
+		end
+
+	end)
 	self.timer:after(0.2, function() 
 
 		local x, y = self:getCenter()
 		local things, len
 		if self.Sx > 0 then 
 		 	things, len = self.world:queryRect(x, y-9, 16, 12)
+		 	for i=1, len do
+		 		if things[i].hit then
+		 			things[i]:hit()
+		 		end
+			end
+
 		else
 			things, len = self.world:queryRect(x-16, y-9, 16, 12)
+			for i=1, len do
+		 		if things[i].hit then
+		 			things[i]:hit()
+		 		end
+			end
 		end
 
-		for i=1, len do
-		 	if things[i].hit then
-		 		things[i]:hit()
-		 	end
-		end
+	end)
 
+	self.timer:after(0.4, function() 
+
+		local x, y = self:getCenter()
+		local things, len
+		if self.Sx > 0 then 
+		 	things, len = self.world:queryRect(x, y-9, 16, 12)
+		 	for i=1, len do
+		 		if things[i].hit then
+		 			things[i]:hit()
+		 		end
+			end
+
+		else
+			things, len = self.world:queryRect(x-16, y-9, 16, 12)
+			for i=1, len do
+		 		if things[i].hit then
+		 			things[i]:hit()
+		 		end
+			end
+		end
 
 	end)
 
@@ -165,6 +221,7 @@ function Player:filter(other)
 end
 
 function Player:moveCollision(dt)
+	if self.dying then return false end 
 
 	local world = self.world
 	local tx = self.x + self.dx * dt
@@ -188,8 +245,10 @@ end
 function Player:update(dt)
 
 	local x, y = self:getCenter()
-	self.particles:emit(1, x, y)
 
+	if not self.dying then 
+		self.particles:emit(1, x, y)
+	end
 
 	self:input(dt)
 	self:applyGravity(dt)
@@ -207,6 +266,9 @@ function Player:draw()
 
 	self.particles:draw()
 
+	if self.dying then return false end 
+	
+
 	self.anim:draw(self.img, self.x+4, self.y, 0, self.Sx, 1, 8, 9)
 
 	if self.attacking then 
@@ -221,7 +283,36 @@ function Player:draw()
 end
 
 function Player:die()
-	self.game:reset()
+
+	if self.dying then return false end 
+
+	self.dying = true
+	self.passable = true
+
+	local x, y = self:getCenter()
+
+	Debris:new(self,  self.world, x, y, debris1, 200)
+	Debris:new(self,  self.world, x, y, debris1, 200)
+	Debris:new(self,  self.world, x, y, debris2, 200)
+	Debris:new(self,  self.world, x, y, debris3, 200)
+	Debris:new(self,  self.world, x, y, debris3, 200)
+	Debris:new(self,  self.world, x, y, debris3, 200)
+	Debris:new(self,  self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris2, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris2, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+
+	self.game.camera:screenShake(0.1, 5,5)
+
+	self.timer:after(1, function() self.game:reset() end)
 end
 
 local OnGround = Player:addState('OnGround')

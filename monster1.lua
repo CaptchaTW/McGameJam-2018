@@ -3,6 +3,11 @@ local class = require 'lib.middleclass'
 local Timer = require 'lib.timer'
 local anim8 = require 'lib.anim8'
 local Stateful = require 'lib.stateful'
+local Debris = require 'debris'
+
+local debris1 = love.graphics.newImage('sprites/debris1.png')
+local debris2 = love.graphics.newImage('sprites/debris2.png')
+local debris3 = love.graphics.newImage('sprites/debris3.png')
 
 local MonsterTwo = require 'monster2'
 
@@ -39,6 +44,7 @@ function MonsterOne:initialize(game, world, x,y)
   self.enemy = true
   self.damaging = true
   self.world = world
+ 	self.drawOrder = 2
   self.timer = Timer()
   self.timer:every(4, function() 
   	self.leftKey = true 
@@ -108,10 +114,16 @@ function MonsterOne:moveCollision(dt)
 
 	local rx, ry, cols, len = world:move(self, tx, ty, self.filter)
 
+
+
 	for i=1, len do 
 		local col = cols[i]
 		self:checkOnGround(col.normal.y) 
+
+	if col.other.player == true then 
+		col.other:die()
 	end
+end
 
 	self.x, self.y = rx, ry
 end
@@ -133,11 +145,38 @@ end
 local OnHit = MonsterOne:addState('OnHit')
 
 function OnHit:enteredState()
+	local x, y = self:getCenter()
+
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris2, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+
+	self.game.player.movable = false 
+	self.game.player:gotoState(nil)
+	self.game.player.timer:after(1, function() self.game.player.movable = true end)
+	self.game.player.dy = -200
+
+	if self.x > self.game.player.x then
+		self.game.player.dx = -200 
+	else 
+		self.game.player.dx = 200
+	end
+
+
+	self.game.camera:screenShake(0.1, 5,5)
 	self.img = dmg_img
 	self.anim = dmg_anim
+		self.anim:gotoFrame(1)
+		self.anim:resume()
+
 	self.timer:after(0.5, function() 
 		self.img = trs_img 
 		self.anim = trs_anim
+		self.anim:gotoFrame(1)
+		self.anim:resume()
 		self.timer:after(2.1, function()
 			MonsterTwo:new(self.game, self.world, self.x, self.y)
 			self:destroy()

@@ -38,6 +38,7 @@ function MonsterTwo:initialize(game, world, x,y)
   self.timer = Timer()
   self.damaging = true
  	self.particles = Particles:new(self.x, self.y)
+ 	self.dx = 0
  	self:gotoState('Prepare')
  	self.Sy = 1
 end
@@ -59,7 +60,7 @@ function MonsterTwo:checkOnGround(ny)
 end
 
 function MonsterTwo:filter(other)
-	if other.passable then 
+	if other.passable or other.player then 
 		return false 
 	else
 		return 'slide'
@@ -78,7 +79,10 @@ function MonsterTwo:moveCollision(dt)
 
 	for i=1, len do 
 		local col = cols[i]
-		self:checkOnGround(col.normal.y) 
+		self:checkOnGround(col.normal.y, col.other) 
+		if col.other.player == true then 
+			col.other:die()
+		end
 	end
 
 	self.x, self.y = rx, ry
@@ -132,15 +136,17 @@ function Torpedo:update(dt)
 	self.anim:update(dt)
 end
 
-function Torpedo:checkOnGround(ny)
+function Torpedo:checkOnGround(ny, other)
 	if ny < 0 then 
-		self:gotoState('Prepare')
-		self.game.camera:screenShake(0.1, 5,5)
-		local x,y = self:getCenter()
-		Dust:new(self.world, x, y)
-		Projectile:new(self.world, x, y, 100)
-		Projectile:new(self.world, x, y, -100)
-		self.Sy = 1
+
+			self:gotoState('Prepare')
+
+			self.game.camera:screenShake(0.1, 5,5)
+			local x,y = self:getCenter()
+			Dust:new(self.world, x, y)
+			Projectile:new(self.world, x, y, 100)
+			Projectile:new(self.world, x, y, -100)
+			self.Sy = 1
 	end
 end
 
@@ -150,6 +156,7 @@ function Prepare:enteredState()
 	self.img = img 
   self.anim = anim
   self.anim:gotoFrame(1)
+  self.drawOrder = 2
   self.anim:resume()
  	self.timer:after(0.8, function() 
  		if self.game.player.x > self.x then 
