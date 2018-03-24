@@ -385,6 +385,7 @@ end
 local Rolling = Player:addState('Rolling')
 
 function Rolling:enteredState()
+	roll:play()
 	self.passable = true
 	self.anim = roll_anim
 	self.img = roll_img

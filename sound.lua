@@ -3,6 +3,7 @@ music1 = love.audio.newSource("poop2.mp3")
 boom = love.audio.newSource("boom.mp3")
 music2 = love.audio.newSource("poop3.mp3")
 jumpsound = love.audio.newSource("jump1.wav")
+roll = love.audio.newSource("roll.mp3")
 
 
 
