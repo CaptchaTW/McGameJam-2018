@@ -7,9 +7,8 @@ local Floor = class('Floor', Entity)
 local width, height = 100000, 1000 
 
 function Floor:initialize(world, x, y)
-  Entity.initialize(self, world, x, y, width, height)
+  Entity.initialize(self, world, -50000, y, width, height)
   self.world = world
-  self.damaging = true
 end
 
 function Floor:update()

@@ -1,21 +1,28 @@
 local class = require 'lib.middleclass'
 local bump = require 'lib.bump'
+local Camera = require 'camera'
 
 local Floor = require 'floor'
 
 local Player = require 'player'
 local Floor = require 'floor'
-local RedFloor = require 'redfloor'
+local MonsterOne = require 'monster1'
 
 
-x,y,w,h = 0,0,10000,10000
+x,y,w,h = -10000, -10000,20000,20000
+
+width, height = 384, 216
 
 local Game = class('Game')
 
-function Game:initialize()
+function Game:initialize(width, height)
+	love.window.setMode(width, height, {resizable = true})
+
   self.world  = bump.newWorld()
+  self.camera = Camera:new(self.world, 0,0, width, height)
   self.player = Player:new(self.world, 0,0)
-  self.floor = Floor:new(self.world, 0, 500)
+  self.floor = Floor:new(self.world, 0, 150)
+  self.monster = MonsterOne:new(self.world, 500, 100)
 end
 
 
@@ -29,10 +36,24 @@ function Game:exit()
 end
 
 function Game:resize(w, h)
+	self.camera:resize(w,h)
 end
+
+local targetx = 0 
+
 
 function Game:update(dt)
 
+	if self.player.x - targetx > 20 then 
+		targetx = targetx +  (self.player.x -22 - targetx) * 0.8 * dt
+	end
+
+	if self.player.x - targetx < -20 then 
+		targetx = targetx + (self.player.x +22 - targetx) * 0.8 *dt
+	end
+
+
+	self.camera:setCenter(targetx, 100)
 
   local visibleThings, len = self.world:queryRect(x,y,w,h)
 
@@ -43,14 +64,7 @@ function Game:update(dt)
 end
 
 function Game:draw(debug)
-
-
-	local visibleThings, len = self.world:queryRect(x,y,w,h)
-
-  for i=1, len do
-    visibleThings[i]:draw(dt)
-  end
-
+	self.camera:draw()
 end
 
 function Game:keypressed(key)

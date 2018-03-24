@@ -1,10 +1,12 @@
 local Entity = require 'entity'
 local class = require 'lib.middleclass'
+local anim8 = require 'lib.anim8'
 
 
 local Player = class('Player', Entity)
 
 local width, height = 4, 16
+local attackW = 20
 local friction = 0.00005
 
 local hspeed = 75
@@ -15,6 +17,7 @@ local jumpSpeed = -200
 function Player:initialize(world, x,y)
   Entity.initialize(self, world, x, y, width, height)
   self.world = world
+
 end
 
 
@@ -70,15 +73,34 @@ function Player:jump()
 	end
 end
 
+function Player:roll()
+	self.rolling = true 
+	self.timer:after(0.5, function() self.rolling = false end)
+end
+
+function Player:attack()
+	 local things, len = self.world:queryRect(self.x-attackW, self.y, attackW*2, self.h)
+
+	 for i=1, len do
+	 	if things[i].hit then
+	 		things[i]:hit()
+	 	end
+	end
+end
+
 function Player:keyreleased(key)
 
 end
 
-function Player:checkOnGround()
-	self.onGround = true
+function Player:checkOnGround(ny)
+  if ny < 0  then 
+  	self.onGround = true
+  end
 end
 
 function Player:moveCollision(dt)
+
+	self.onGround = false
 
 	local world = self.world
 	local tx = self.x + self.dx * dt
@@ -88,6 +110,7 @@ function Player:moveCollision(dt)
 
 	for i=1, len do 
 		local col = cols[i]
+
 		if col.other.damaging then 
 		end
 
@@ -102,6 +125,7 @@ function Player:update(dt)
 	self:applyGravity(dt)
 	self:applyMovement(dt)
 	self:moveCollision(dt)
+	self.anim:update(dt)
 end
 
 function Player:draw()
