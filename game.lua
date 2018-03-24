@@ -43,6 +43,7 @@ local targetx = 0
 
 
 function Game:update(dt)
+	self.camera:update(dt)
 
 	if self.player.x - targetx > 20 then 
 		targetx = targetx +  (self.player.x -22 - targetx) * 0.99 * dt

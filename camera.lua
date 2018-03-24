@@ -104,7 +104,6 @@ end
 
 function Camera:update(dt)
 	self.timer:update(dt)
-	self.ambientParticles:update(dt)
 end
 
 

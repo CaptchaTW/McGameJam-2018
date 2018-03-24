@@ -4,9 +4,11 @@ local Timer = require 'lib.timer'
 local anim8 = require 'lib.anim8'
 local Stateful = require 'lib.stateful'
 local Particles = require 'particles'
+local Dust = require 'landingdust'
+local Projectile = require 'projectile'
 
-local MonsterOne = class('MonsterOne', Entity)
-MonsterOne:include(Stateful)
+local MonsterTwo = class('MonsterTwo', Entity)
+MonsterTwo:include(Stateful)
 
 local width, height = 10, 5
 local friction = 0.00005
@@ -25,7 +27,7 @@ local dmg_grid = anim8.newGrid(16, 16, dmg_img:getWidth(), dmg_img:getHeight())
 local dmg_anim = anim8.newAnimation(dmg_grid(1, 1), 0.1, 'pauseAtEnd')
 
 
-function MonsterOne:initialize(game, world, x,y)
+function MonsterTwo:initialize(game, world, x,y)
   Entity.initialize(self, world, x, y, width, height)
 
   self.game = game
@@ -38,23 +40,23 @@ function MonsterOne:initialize(game, world, x,y)
  	self:gotoState('Prepare')
 end
 
-function MonsterOne:AI(dt)
+function MonsterTwo:AI(dt)
 
 end
 
-function MonsterOne:hit()
+function MonsterTwo:hit()
 	self:gotoState('OnHit')
 end
 
-function MonsterOne:applyMovement(dt)
+function MonsterTwo:applyMovement(dt)
 
 end
 
 
-function MonsterOne:checkOnGround(ny)
+function MonsterTwo:checkOnGround(ny)
 end
 
-function MonsterOne:filter(other)
+function MonsterTwo:filter(other)
 	if other.passable then 
 		return false 
 	else
@@ -62,7 +64,7 @@ function MonsterOne:filter(other)
 	end
 end
 
-function MonsterOne:moveCollision(dt)
+function MonsterTwo:moveCollision(dt)
 
 	self.onGround = false
 
@@ -81,7 +83,7 @@ function MonsterOne:moveCollision(dt)
 
 end
 
-function MonsterOne:update(dt)
+function MonsterTwo:update(dt)
 	self.particles:update(dt)
 	self.timer:update(dt)
 	self:AI(dt)
@@ -91,20 +93,20 @@ function MonsterOne:update(dt)
 	self.anim:update(dt)
 end
 
-function MonsterOne:draw()
+function MonsterTwo:draw()
 --	love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
 	self.particles:draw()
 	self.anim:draw(self.img, self.x+4, self.y, 0, self.Sx, 1, 8, 11)
 end
 
-local Torpedo = MonsterOne:addState('Torpedo')
+local Torpedo = MonsterTwo:addState('Torpedo')
 
 function Torpedo:enteredState()
   self.img = dmg_img 
   self.anim = dmg_anim
   self.anim:gotoFrame(1)
   self.anim:resume()
-  self.dy = 100 
+  self.dy = 200 
   self.dx = 0
 end
 
@@ -124,10 +126,15 @@ function Torpedo:checkOnGround(ny)
 	if ny < 0 then 
 		self:gotoState('Prepare')
 		self.game.camera:screenShake(0.1, 5,5)
+		local x,y = self:getCenter()
+		Dust:new(self.world, x, y)
+		Projectile:new(self.world, x, y, 100)
+		Projectile:new(self.world, x, y, -100)
+
 	end
 end
 
-local Prepare = MonsterOne:addState('Prepare')
+local Prepare = MonsterTwo:addState('Prepare')
 
 function Prepare:enteredState()
 	self.img = img 
@@ -138,23 +145,23 @@ function Prepare:enteredState()
  		else
  			self.dx = - 100
  		end
- 		self.dy = -250
+ 		self.dy = -150 - math.random(0,100)
  	end)
 end
 
 function Prepare:checkOnGround(ny)
 	if ny < 0 and self.dx ~= 0 then 
-		self:gotoState('Stop')
+		self:gotoState('Torpedo')
 	end
 end
 
 function Prepare:AI()
- 		if math.abs(self.x - self.game.player.x) < 5 then 
+ 		if math.abs(self.x - self.game.player.x) < 5 and self.y < self.game.player.y then 
  			self:gotoState('Stop')
  		end
 end
 
-local Stop = MonsterOne:addState('Stop')
+local Stop = MonsterTwo:addState('Stop')
 
 function Stop:enteredState()
 	self.dx = 0
@@ -165,7 +172,7 @@ end
 function Stop:applyGravity()
 end
 
-local OnHit = MonsterOne:addState('OnHit')
+local OnHit = MonsterTwo:addState('OnHit')
 
 function OnHit:enteredState()
 	self.img = dmg_img
@@ -179,4 +186,4 @@ function OnHit:enteredState()
 	  end)
 end
 
-return MonsterOne
+return MonsterTwo
