@@ -43,6 +43,11 @@ function Game:reset()
 	end
 
   self.monster = MonsterOne:new(self, self.world, 100, 100)
+  music:play()
+  music:setLooping(true)
+
+music:play()
+music:setLooping(true)
   self.camera:resize(love.graphics.getWidth(), love.graphics.getHeight())
 end
 

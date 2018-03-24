@@ -315,7 +315,7 @@ function Player:die()
 
 	self.game.camera:screenShake(0.1, 5,5)
 
-	self.timer:after(1, function() self.game:reset() end)
+	self.timer:after(1, function() love.audio.stop( )self.game:reset() end)
 end
 
 local OnGround = Player:addState('OnGround')
