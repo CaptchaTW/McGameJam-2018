@@ -8,7 +8,7 @@ local Player = require 'player'
 local Floor = require 'floor'
 local MonsterOne = require 'monster1'
 
-
+require'sound'
 x,y,w,h = -10000, -10000,20000,20000
 
 width, height = 384, 216
