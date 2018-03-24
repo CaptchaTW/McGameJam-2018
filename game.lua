@@ -24,7 +24,21 @@ function Game:reset()
 	self.world  = bump.newWorld()
   self.camera = Camera:new(self.world, 0,0, width, height)
   self.player = Player:new(self, self.world, 0,0)
-  self.floor = Floor:new(self.world, 0, 150)
+   while floor_x~=10000 do
+  self.floor = Floor:new(self.world, floor_x, floor_y)
+  floor_x =floor_x+16
+  end
+  while floor_y~=210 do
+  	 self.floor = Floor:new(self.world, floor_x, floor_y)
+
+
+  floor_y =floor_y-15
+  floor_x = -10000
+end
+  while floor_x~=10000 do
+  self.floor = Floor:new(self.world, floor_x, floor_y)
+  floor_x =floor_x+16
+end
   self.monster = MonsterOne:new(self, self.world, 100, 100)
   self.camera:resize(love.graphics.getWidth(), love.graphics.getHeight())
 end
