@@ -6,6 +6,12 @@ local Stateful = require 'lib.stateful'
 local Particles = require 'particles'
 local Dust = require 'landingdust'
 local Projectile = require 'projectile'
+local Debris = require 'debris'
+local MonsterThree = require 'monster3'
+
+local debris1 = love.graphics.newImage('sprites/debris1.png')
+local debris2 = love.graphics.newImage('sprites/debris2.png')
+local debris3 = love.graphics.newImage('sprites/debris3.png')
 
 local MonsterTwo = class('MonsterTwo', Entity)
 MonsterTwo:include(Stateful)
@@ -25,6 +31,10 @@ local anim = anim8.newAnimation(grid(1, '1-9'), 0.1, 'pauseAtEnd')
 local dmg_img = love.graphics.newImage('sprites/secondformtorpedo.png')
 local dmg_grid = anim8.newGrid(16, 16, dmg_img:getWidth(), dmg_img:getHeight())
 local dmg_anim = anim8.newAnimation(dmg_grid(1, 1), 0.1, 'pauseAtEnd')
+
+local trs_img = love.graphics.newImage('sprites/secondformtransforming.png')
+local trs_grid = anim8.newGrid(32, 57, trs_img:getWidth(), trs_img:getHeight())
+local trs_anim = anim8.newAnimation(trs_grid('1-34', 1), 0.1, 'pauseAtEnd')
 
 
 function MonsterTwo:initialize(game, world, x,y)
@@ -68,6 +78,7 @@ function MonsterTwo:filter(other)
 end
 
 function MonsterTwo:moveCollision(dt)
+	if self.dying then return false end
 
 	self.onGround = false
 
@@ -88,9 +99,9 @@ function MonsterTwo:moveCollision(dt)
 	self.x, self.y = rx, ry
 
  		if self.game.player.x > self.x then 
- 			self.Sx = 1
- 		else
  			self.Sx = -1
+ 		else
+ 			self.Sx = 1
  		end
 
 end
@@ -108,7 +119,7 @@ end
 function MonsterTwo:draw()
 -- 	love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
 	self.particles:draw()
-	self.anim:draw(self.img, self.x+5, self.y, 0, self.Sx, self.Sy, 9, 0)
+	self.anim:draw(self.img, self.x+5, self.y, 0, self.Sx, self.Sy, 9, self.Oy)
 end
 
 local Torpedo = MonsterTwo:addState('Torpedo')
@@ -143,7 +154,7 @@ function Torpedo:checkOnGround(ny, other)
 
 			self.game.camera:screenShake(0.1, 5,5)
 			local x,y = self:getCenter()
-			Dust:new(self.world, x, y)
+			Dust:new(self.world, x, y, 'impact')
 			Projectile:new(self.world, x, y, 100)
 			Projectile:new(self.world, x, y, -100)
 			self.Sy = 1
@@ -198,13 +209,44 @@ end
 local OnHit = MonsterTwo:addState('OnHit')
 
 function OnHit:enteredState()
+	local x, y = self:getCenter()
+
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris2, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+
+	self.game.player.movable = false 
+	self.game.player:gotoState(nil)
+	self.game.player.timer:after(1, function() self.game.player.movable = true end)
+	self.game.player.dy = -200
+
+	if self.x > self.game.player.x then
+		self.game.player.dx = -200 
+	else 
+		self.game.player.dx = 200
+	end
+
+
+	self.game.camera:screenShake(0.1, 5,5)
 	self.img = dmg_img
 	self.anim = dmg_anim
+		self.anim:gotoFrame(1)
+		self.anim:resume()
+
+		self.dying = true
+
 	self.timer:after(0.5, function() 
---		self.img = trs_img 
---		self.anim = trs_anim
-		self.timer:after(2.1, function()
-			MonsterTwo:new(self.game, self.world, self.x, self.y)
+		self.img = trs_img 
+		self.anim = trs_anim
+		self.dx = 0
+		self.Oy = 41
+		self.anim:gotoFrame(1)
+		self.anim:resume()
+		self.timer:after(3.4, function()
+			MonsterThree:new(self.game, self.world, self.x, self.y)
 			self:destroy()
 			end)
 	  end)
