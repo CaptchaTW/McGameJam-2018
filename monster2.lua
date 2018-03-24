@@ -151,7 +151,7 @@ function Torpedo:checkOnGround(ny, other)
 	if ny < 0 then 
 
 			self:gotoState('Prepare')
-
+			boom:play()
 			self.game.camera:screenShake(0.1, 5,5)
 			local x,y = self:getCenter()
 			Dust:new(self.world, x, y, 'impact')

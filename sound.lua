@@ -1,5 +1,6 @@
 music = love.audio.newSource("cute2.mp3")
 music1 = love.audio.newSource("poop2.mp3")
+boom = love.audio.newSource("boom.mp3")
 
 jumpsound = love.audio.newSource("jump1.wav")
 
