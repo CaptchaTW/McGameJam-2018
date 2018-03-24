@@ -155,8 +155,8 @@ function Torpedo:checkOnGround(ny, other)
 			self.game.camera:screenShake(0.1, 5,5)
 			local x,y = self:getCenter()
 			Dust:new(self.world, x, y, 'impact')
-			Projectile:new(self.world, x, y, 100)
-			Projectile:new(self.world, x, y, -100)
+			Projectile:new(self.world, x, y, 8, 8,  100)
+			Projectile:new(self.world, x, y, 8, 8, -100)
 			self.Sy = 1
 	end
 end

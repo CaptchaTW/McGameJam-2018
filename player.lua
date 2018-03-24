@@ -45,7 +45,7 @@ local jumpEndSpeed = -20
 
 	local idle_anim = anim8.newAnimation(idle_grid(1, 1), 1, "pauseAtEnd")
 	local run_anim = anim8.newAnimation(run_grid(1, '1-7'), 0.1)
-	local roll_anim = anim8.newAnimation(roll_grid(1, '1-6'), 0.1)
+	local roll_anim = anim8.newAnimation(roll_grid('1-5', 1), 0.1)
 	local jump_anim = anim8.newAnimation(jump_grid(1, '1-5'), 0.15, "pauseAtEnd")
 	local slash_anim = anim8.newAnimation(slash_grid('1-4', 1), 0.1)
 	local slash_anim2 = anim8.newAnimation(slash_grid('1-4', 2), 0.1)

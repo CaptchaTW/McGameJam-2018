@@ -20,7 +20,7 @@ local jumpSpeed = -200
 
 local img = love.graphics.newImage('sprites/thirdformattack.png')
 local grid = anim8.newGrid(38, 56, img:getWidth(), img:getHeight())
-local anim = anim8.newAnimation(grid('1-10', 1), 0.1, 'pauseAtEnd')
+local anim = anim8.newAnimation(grid('1-10', 1, 1, 1), 0.1, 'pauseAtEnd')
 
 local dmg_img = love.graphics.newImage('sprites/thirdformcharge.png')
 local dmg_grid = anim8.newGrid(40, 56, dmg_img:getWidth(), dmg_img:getHeight())
@@ -60,7 +60,7 @@ function MonsterTwo:checkOnGround(ny)
 end
 
 function MonsterTwo:filter(other)
-	if other.passable or other.player then 
+	if other.passable or other.player or other.projectile then 
 		return false 
 	else
 		return 'slide'
@@ -87,12 +87,6 @@ function MonsterTwo:moveCollision(dt)
 
 	self.x, self.y = rx, ry
 
- 		if self.game.player.x > self.x then 
- 			self.Sx = -1
- 		else
- 			self.Sx = 1
- 		end
-
 end
 
 function MonsterTwo:update(dt)
@@ -114,12 +108,31 @@ end
 local Lazer = MonsterTwo:addState('Lazer')
 
 function Lazer:enteredState()
+ 		if self.game.player.x > self.x then 
+ 			self.Sx = -1
+ 		else
+ 			self.Sx = 1
+ 		end
+
 	self.dx = 0
 	self.dy = 0
 	self.img = dmg_img 
   self.anim = dmg_anim
   self.anim:gotoFrame(1)
-  self.timer:after(1.7, function() self:gotoState('Pause') self.x = self.x + 2*self.Sx end)
+  self.anim:resume()
+  self.timer:after(1.7, function() 
+  	self:gotoState('Pause') 
+  	self.anim:gotoFrame(1)
+  	self.x = self.x + 5*self.Sx 
+  end)
+  self.timer:after(1.4, function()
+  	local x, y = self:getCenter()
+  	if self.Sx == -1 then 
+  		Projectile:new(self.world, x, y+10, 1000,  16, 0, 0, 'lazer')
+  	else 
+  		Projectile:new(self.world, x-1000, y+10, 1000,  16, 0, 0, 'lazer')
+  	end
+  end)
 end
 
 
@@ -128,16 +141,23 @@ local Pause = MonsterTwo:addState('Pause')
 function Pause:enteredState()
 	self.dx = 0
 	self.dy= 0
-	if math.random() > 0.5 then 
-		self.timer:after(math.random(1,4), function() self:gotoState('Lazer') end)
+	if math.random(1 , 10) > 2   then 
+		self.timer:after(math.random(1,2), function() self:gotoState('Lazer') end)
 	else
-		self.timer:after(math.random(1,4), function() self:gotoState('Prepare') end)
+		self.timer:after(math.random(1,2), function() self:gotoState('Prepare') end)
 	end
 end
 
 local Prepare = MonsterTwo:addState('Prepare')
 
 function Prepare:enteredState()
+ 		if self.game.player.x > self.x then 
+ 			self.Sx = -1
+ 		else
+ 			self.Sx = 1
+ 		end
+
+
 	self.img = img 
   self.anim = anim
   self.anim:gotoFrame(1)
@@ -164,16 +184,7 @@ end
 local OnHit = MonsterTwo:addState('OnHit')
 
 function OnHit:enteredState()
-	self.img = dmg_img
-	self.anim = dmg_anim
-	self.timer:after(0.5, function() 
---		self.img = trs_img 
---		self.anim = trs_anim
-		self.timer:after(2.1, function()
-			MonsterTwo:new(self.game, self.world, self.x, self.y)
-			self:destroy()
-			end)
-	  end)
+
 end
 
 return MonsterTwo
