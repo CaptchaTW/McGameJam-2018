@@ -8,6 +8,7 @@ local Dust = require 'landingdust'
 local Projectile = require 'projectile'
 local Weakpoint = require 'weakpoint'
 local Debris = require 'debris'
+local MonsterFour = require 'monster4'
 
 
 local debris1 = love.graphics.newImage('sprites/debris1.png')
@@ -33,6 +34,9 @@ local dmg_img = love.graphics.newImage('sprites/thirdformcharge.png')
 local dmg_grid = anim8.newGrid(40, 56, dmg_img:getWidth(), dmg_img:getHeight())
 local dmg_anim = anim8.newAnimation(dmg_grid('1-17', 1), 0.05, 'pauseAtEnd')
 
+local trs_img = love.graphics.newImage('sprites/thirdformtransformation.png')
+local trs_grid = anim8.newGrid(128, 128, trs_img:getWidth(), trs_img:getHeight())
+local trs_anim = anim8.newAnimation(trs_grid(1, '1-42'), 0.1, 'pauseAtEnd')
 
 function MonsterThree:initialize(game, world, x,y)
   Entity.initialize(self, world, x, y, width, height)
@@ -76,7 +80,7 @@ function MonsterThree:filter(other)
 end
 
 function MonsterThree:moveCollision(dt)
-
+	if self.dying then return false end
 	self.onGround = false
 
 	local world = self.world
@@ -110,7 +114,7 @@ end
 function MonsterThree:draw()
 -- 	love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
 	self.particles:draw()
-	self.anim:draw(self.img, self.x+5, self.y, 0, self.Sx, self.Sy, 16, 0)
+	self.anim:draw(self.img, self.x+5, self.y, 0, self.Sx, self.Sy, self.Ox or 16, self.Oy)
 end
 
 local Lazer = MonsterThree:addState('Lazer')
@@ -124,20 +128,27 @@ function Lazer:enteredState()
 
 	self.dx = 0
 	self.dy = 0
-	self.img = dmg_img 
-  self.anim = dmg_anim
-  self.anim:gotoFrame(1)
-  self.anim:resume()
+	if not self.dying then  
+		self.img = dmg_img 
+	  self.anim = dmg_anim
+	  self.anim:gotoFrame(1)
+	  self.anim:resume()
+	end
   self.timer:after(1.2, function() 
-  	self:gotoState('Pause') 
-  	self.anim:gotoFrame(1)
-  	self.x = self.x + 5*self.Sx 
+  	if not self.dying then
+	  	self:gotoState('Pause') 
+	  	self.anim:gotoFrame(1)
+	  	self.x = self.x + 5*self.Sx 
+	  	self.game.camera:screenShake(0.4, 2,2)
+  	end
   end)
   self.timer:after(1, function()
-  	local x, y = self:getCenter()
-  		Projectile:new(self.world, x, y+10, 1000,  16, 0, 0, 'lazer')
-  		Projectile:new(self.world, x-1000, y+10, 1000,  16, 0, 0, 'lazer')
-  		laser:play()
+  	if not self.dying then
+	  	local x, y = self:getCenter()
+	  		Projectile:new(self.world, x, y+10, 1000,  16, 0, 0, 'lazer')
+	  		Projectile:new(self.world, x-1000, y+10, 1000,  16, 0, 0, 'lazer')
+	  		laser:play()
+	  end
   end)
 end
 
@@ -147,10 +158,12 @@ local Pause = MonsterThree:addState('Pause')
 function Pause:enteredState()
 	self.dx = 0
 	self.dy= 0
-	if math.random(1 , 10) > 2   then 
-		self.timer:after(math.random(5,13)/10, function() self:gotoState('Lazer') end)
-	else
-		self.timer:after(math.random(5,13)/10, function() self:gotoState('Prepare') end)
+	if not self.dying then
+		if math.random(1 , 5) > 2   then 
+			self.timer:after(math.random(5,13)/10, function() self:gotoState('Lazer') end)
+		else
+			self.timer:after(math.random(5,13)/10, function() self:gotoState('Prepare') end)
+		end
 	end
 end
 
@@ -163,20 +176,22 @@ function Prepare:enteredState()
  			self.Sx = 1
  		end
 
-
-	self.img = img 
-  self.anim = anim
-  self.anim:gotoFrame(1)
-  self.drawOrder = 2
+ if not self.dying then 
+		self.img = img 
+	  self.anim = anim
+	  self.anim:gotoFrame(1)
+	  self.drawOrder = 2
+	end
   self.anim:resume()
  	self.timer:after(0.8, function() 
+ 		self.game.camera:screenShake(0.4, 2,2)
  		if self.game.player.x > self.x then 
  			self.dx = 200 
  		else
  			self.dx = - 200
  		end
 	end)
- self.timer:after(math.random(10, 15)/10, function() self:gotoState('Pause') end)
+ self.timer:after(math.random(10, 2)/10, function() if not self.dying then self:gotoState('Pause') end end)
 
 end
 
@@ -191,6 +206,8 @@ local OnHit = MonsterThree:addState('OnHit')
 
 function OnHit:enteredState()
 	local x, y = self:getCenter()
+
+	self.dying = true
 
 	Debris:new(self, self.world, x, y, debris1, 200)
 	Debris:new(self, self.world, x, y, debris1, 200)
@@ -226,10 +243,11 @@ function OnHit:enteredState()
 		self.img = trs_img 
 		self.anim = trs_anim
 		self.dx = 0
-		self.Oy = 41
+		self.Ox = 40
+		self.Oy = 74
 		self.anim:gotoFrame(1)
 		self.anim:resume()
-		self.timer:after(3.4, function()
+		self.timer:after(4.2, function()
 			MonsterFour:new(self.game, self.world, self.x, self.y)
 			self:destroy()
 			end)
