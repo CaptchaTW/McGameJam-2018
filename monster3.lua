@@ -8,7 +8,7 @@ local Dust = require 'landingdust'
 local Projectile = require 'projectile'
 local Weakpoint = require 'weakpoint'
 local Debris = require 'debris'
-local MonsterFour = require 'monster3'
+
 
 local debris1 = love.graphics.newImage('sprites/debris1.png')
 local debris2 = love.graphics.newImage('sprites/debris2.png')
