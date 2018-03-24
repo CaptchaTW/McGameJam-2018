@@ -33,7 +33,7 @@ local anim = anim8.newAnimation(grid('1-10', 1, 1, 1), 0.1, 'pauseAtEnd')
 
 local dmg_img = love.graphics.newImage('sprites/thirdformcharge.png')
 local dmg_grid = anim8.newGrid(40, 56, dmg_img:getWidth(), dmg_img:getHeight())
-local dmg_anim = anim8.newAnimation(dmg_grid('1-17', 1), 0.1, 'pauseAtEnd')
+local dmg_anim = anim8.newAnimation(dmg_grid('1-17', 1), 0.05, 'pauseAtEnd')
 
 
 function MonsterThree:initialize(game, world, x,y)
@@ -130,18 +130,15 @@ function Lazer:enteredState()
   self.anim = dmg_anim
   self.anim:gotoFrame(1)
   self.anim:resume()
-  self.timer:after(1.7, function() 
+  self.timer:after(1.2, function() 
   	self:gotoState('Pause') 
   	self.anim:gotoFrame(1)
   	self.x = self.x + 5*self.Sx 
   end)
-  self.timer:after(1.4, function()
+  self.timer:after(1, function()
   	local x, y = self:getCenter()
-  	if self.Sx == -1 then 
   		Projectile:new(self.world, x, y+10, 1000,  16, 0, 0, 'lazer')
-  	else 
   		Projectile:new(self.world, x-1000, y+10, 1000,  16, 0, 0, 'lazer')
-  	end
   end)
 end
 
@@ -152,9 +149,9 @@ function Pause:enteredState()
 	self.dx = 0
 	self.dy= 0
 	if math.random(1 , 10) > 2   then 
-		self.timer:after(math.random(1,2), function() self:gotoState('Lazer') end)
+		self.timer:after(math.random(5,10)/10, function() self:gotoState('Lazer') end)
 	else
-		self.timer:after(math.random(1,2), function() self:gotoState('Prepare') end)
+		self.timer:after(math.random(5,10)/10, function() self:gotoState('Prepare') end)
 	end
 end
 
