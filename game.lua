@@ -11,7 +11,7 @@ local MonsterOne = require 'monster1'
 
 x,y,w,h = -10000, -10000,20000,20000
 
-width, height = 192, 108
+width, height = 384, 216
 
 local Game = class('Game')
 
@@ -22,7 +22,7 @@ function Game:initialize(width, height)
   self.camera = Camera:new(self.world, 0,0, width, height)
   self.player = Player:new(self.world, 0,0)
   self.floor = Floor:new(self.world, 0, 150)
-  self.monster = MonsterOne:new(self.world, 100, 100)
+  self.monster = MonsterOne:new(self, self.world, 100, 100)
 end
 
 

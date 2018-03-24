@@ -225,6 +225,10 @@ function OnGround:enteredState()
 	Dust:new(self.world, x, y)
 
 	self.particles:emit(10, x, y + 4)
+
+	if self.rollKey then 
+		self:gotoState('Rolling')
+	end
 end
 
 function OnGround:checkOnGround()
@@ -284,6 +288,7 @@ function Rolling:enteredState()
 	self.img = roll_img
 	self.anim:gotoFrame(1)
 	self.timer:after(0.6, function() self:gotoState(nil) end )
+
 end
 
 function Rolling:checkOnGround()
@@ -298,9 +303,10 @@ function Rolling:jump()
 		self.anim:resume()
 end
 
+function Rolling:attack()
+end
+
 function Rolling:applyMovement()
-
-
 
 	if self.Sx == -1 then
 		self.dx = -rollSpeed
@@ -310,5 +316,7 @@ function Rolling:applyMovement()
 	end 
 end
 
+function Rolling:exitedState()
+end
 
 return Player

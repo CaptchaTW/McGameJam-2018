@@ -19,6 +19,7 @@ function Camera:initialize(world, x, y, w, h)
 	self.Wy = 0
 	self.WScale = 1 
 	self.scale = 1
+	self.timer = Timer()
 end
 
 
@@ -119,7 +120,7 @@ function Camera:draw( entities, lights, debug)
 	-- Map is translated to correct position so the right section is drawn
 	lg.push()
 
-	lg.translate(self.Gx, self.Gy)
+	lg.translate(self.Gx + self.Ox, self.Gy + self.Oy)
 	
 	local visibleThings, len = self.world:queryRect(x,y,w,h)
   for i=1, len do
