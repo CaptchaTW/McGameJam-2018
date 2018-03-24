@@ -287,6 +287,8 @@ end
 
 function Player:die()
 
+	splatter:play()
+
 	if self.dying then return false end 
 
 	self.dying = true
