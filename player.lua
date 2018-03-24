@@ -315,7 +315,7 @@ function Player:die()
 
 	self.game.camera:screenShake(0.1, 5,5)
 
-	self.timer:after(1, function() self.game:reset() end)
+	self.timer:after(1, function() love.audio.stop( )self.game:reset() end)
 end
 
 local OnGround = Player:addState('OnGround')
@@ -339,6 +339,7 @@ function OnGround:jump()
 		self:gotoState(nil)
 		self.anim = jump_anim 
 		self.img = jump_img 
+		jumpsound:play()
 		self.anim:gotoFrame(1)
 		self.anim:resume()
 end
