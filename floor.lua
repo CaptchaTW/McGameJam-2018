@@ -10,6 +10,7 @@ local width, height = 16, 16
 function Floor:initialize(world, x, y)
   Entity.initialize(self, world, x, y, width, height)
   self.world = world
+  self.drawOrder = 5
 end
 
 function Floor:update()
