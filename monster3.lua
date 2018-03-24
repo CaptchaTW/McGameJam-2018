@@ -137,6 +137,7 @@ function Lazer:enteredState()
   	local x, y = self:getCenter()
   		Projectile:new(self.world, x, y+10, 1000,  16, 0, 0, 'lazer')
   		Projectile:new(self.world, x-1000, y+10, 1000,  16, 0, 0, 'lazer')
+  		laser:play()
   end)
 end
 
