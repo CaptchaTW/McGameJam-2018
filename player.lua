@@ -124,8 +124,11 @@ end
 function Player:attack()
 
 	if self.attacking then return false end
-
+slashsound: setPitch(0.9 + math.random()/2)
+	slashsound:play() 
+	
 	slash_anim:gotoFrame(1)
+	
 	self.timer:after(0.1, function() 
 
 		local x, y = self:getCenter()
