@@ -36,7 +36,7 @@ local dmg_anim = anim8.newAnimation(dmg_grid('1-17', 1), 0.05, 'pauseAtEnd')
 
 local trs_img = love.graphics.newImage('sprites/thirdformtransformation.png')
 local trs_grid = anim8.newGrid(128, 128, trs_img:getWidth(), trs_img:getHeight())
-local trs_anim = anim8.newAnimation(trs_grid(1, '1-42'), 0.1, 'pauseAtEnd')
+local trs_anim = anim8.newAnimation(trs_grid(1, '1-40'), 0.1, 'pauseAtEnd')
 
 function MonsterThree:initialize(game, world, x,y)
   Entity.initialize(self, world, x, y, width, height)

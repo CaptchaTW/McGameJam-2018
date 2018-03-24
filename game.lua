@@ -43,7 +43,7 @@ function Game:reset()
 	end
 
   self.monster = MonsterOne:new(self, self.world, 100, 100)
-  love.graphics.setBackgroundColor(162, 221, 232)
+  self.backgroundcolor = {r = 162, g = 221, b = 232}
   music:play()
   music:setLooping(true)
 
@@ -70,6 +70,8 @@ local targetx = 0
 
 
 function Game:update(dt)
+
+	love.graphics.setBackgroundColor(self.backgroundcolor.r, self.backgroundcolor.g, self.backgroundcolor.b)
 	self.camera:update(dt)
 
 	if self.player.x - targetx > 20 then 

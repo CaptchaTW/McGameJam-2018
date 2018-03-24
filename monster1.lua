@@ -179,6 +179,8 @@ function OnHit:enteredState()
 		self.anim:gotoFrame(1)
 		self.anim:resume()
 
+	self.timer:tween(2.1, self.game.backgroundcolor, {r = 116, g = 92, b = 116}, 'linear')
+
 	self.timer:after(0.5, function() 
 		self.img = trs_img 
 		self.anim = trs_anim
@@ -188,7 +190,6 @@ function OnHit:enteredState()
 		self.anim:resume()
 		self.timer:after(2.1, function()
 			MonsterTwo:new(self.game, self.world, self.x, self.y)
-			love.graphics.setBackgroundColor(116, 92, 116)
 			music:setVolume(1)
 			music1:setLooping(true)
 			self:destroy()
