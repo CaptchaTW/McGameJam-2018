@@ -27,7 +27,7 @@ local jumpSpeed = -200
 
 local img = love.graphics.newImage('sprites/fourthformblink.png')
 local grid = anim8.newGrid(128, 128, img:getWidth(), img:getHeight())
-local anim = anim8.newAnimation(grid(1, '1-9'), 0.1, 'pauseAtEnd')
+local anim = anim8.newAnimation(grid(1, '9-1', 1, '1-9'), 0.2, 'pauseAtEnd')
 
 local dmg_img = love.graphics.newImage('sprites/fourthformcrouch.png')
 local dmg_grid = anim8.newGrid(128, 128, dmg_img:getWidth(), dmg_img:getHeight())
@@ -112,7 +112,7 @@ function Blink:enteredState()
 	self.anim:resume()
 	self.hittable = true 
 
-	self.timer:after(0.9, function() self.hittable = false  self:gotoState('Idle') end)
+	self.timer:after(3.4, function() self.hittable = false  self:gotoState('Idle') end)
 end
 
 
@@ -124,11 +124,23 @@ function Attack:enteredState()
 	self.anim:gotoFrame(1)
 	self.anim:resume()
 
-	self.timer:after(0.9, function() 
+	self.timer:after(1, function() 
 		self.anim = dmg_anim2 	
 		self.anim:gotoFrame(1)
 		self.anim:resume()
 	end)
+
+	local x, y = self:getCenter()
+
+	for i=0, 20 do 
+
+		self.timer:after(0.2*i, function()
+			Projectile:new(self.world, x+10+20*i, y-64, 4, 128, 0, 0, 'vine')
+			Projectile:new(self.world, x-10-20*i, y-64, 4, 128, 0, 0, 'vine')
+		end)
+	end
+
+
 
 	self.timer:after(1.8, function() 
 		self:gotoState('Idle')
