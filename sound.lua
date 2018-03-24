@@ -8,3 +8,5 @@ music1 = love.audio.newSource("poop2.mp3")
 
 music1:play()
 music:setLooping(true)
+
+slashsound = love.audio.newSource("zapsplat_warfare_sword_swing_fast_whoosh_metal_004.mp3")--need to add slashsound:play()  under slash_anim:gotoFrame(1) in game
