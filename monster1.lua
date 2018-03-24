@@ -2,8 +2,17 @@ local Entity = require 'entity'
 local class = require 'lib.middleclass'
 local Timer = require 'lib.timer'
 local anim8 = require 'lib.anim8'
+local Stateful = require 'lib.stateful'
+local Debris = require 'debris'
+
+local debris1 = love.graphics.newImage('sprites/debris1.png')
+local debris2 = love.graphics.newImage('sprites/debris2.png')
+local debris3 = love.graphics.newImage('sprites/debris3.png')
+
+local MonsterTwo = require 'monster2'
 
 local MonsterOne = class('MonsterOne', Entity)
+MonsterOne:include(Stateful)
 
 local width, height = 10, 5
 local friction = 0.00005
@@ -15,14 +24,27 @@ local jumpSpeed = -200
 
 local img = love.graphics.newImage('sprites/firstform.png')
 local grid = anim8.newGrid(16, 16, img:getWidth(), img:getHeight())
-local anim = anim8.newAnimation(grid('1-3', 1), 0.1)
+local anim = anim8.newAnimation(grid('1-3', 1), 0.3)
 
-function MonsterOne:initialize(world, x,y)
+local dmg_img = love.graphics.newImage('sprites/firstformdamaged.png')
+local dmg_grid = anim8.newGrid(20, 16, dmg_img:getWidth(), dmg_img:getHeight())
+local dmg_anim = anim8.newAnimation(dmg_grid(1, '1-5'), 0.1, 'pauseAtEnd')
+
+
+local trs_img = love.graphics.newImage('sprites/firstformtransforming.png')
+local trs_grid = anim8.newGrid(20, 16, trs_img:getWidth(), trs_img:getHeight())
+local trs_anim = anim8.newAnimation(trs_grid(1, '1-7'), 0.3, 'pauseAtEnd')
+
+function MonsterOne:initialize(game, world, x,y)
   Entity.initialize(self, world, x, y, width, height)
 
+  self.game = game
   self.img = img 
   self.anim = anim
+  self.enemy = true
+  self.damaging = true
   self.world = world
+ 	self.drawOrder = 2
   self.timer = Timer()
   self.timer:every(4, function() 
   	self.leftKey = true 
@@ -39,7 +61,7 @@ function MonsterOne:AI(dt)
 end
 
 function MonsterOne:hit()
-	self:destroy()
+	self:gotoState('OnHit')
 end
 
 function MonsterOne:applyMovement(dt)
@@ -74,6 +96,14 @@ function MonsterOne:checkOnGround(ny)
   end
 end
 
+function MonsterOne:filter(other)
+	if other.passable then 
+		return false 
+	else
+		return 'slide'
+	end
+end
+
 function MonsterOne:moveCollision(dt)
 
 	self.onGround = false
@@ -84,10 +114,16 @@ function MonsterOne:moveCollision(dt)
 
 	local rx, ry, cols, len = world:move(self, tx, ty, self.filter)
 
+
+
 	for i=1, len do 
 		local col = cols[i]
 		self:checkOnGround(col.normal.y) 
+
+	if col.other.player == true then 
+		col.other:die()
 	end
+end
 
 	self.x, self.y = rx, ry
 end
@@ -105,5 +141,50 @@ function MonsterOne:draw()
 --	love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
 	self.anim:draw(self.img, self.x+4, self.y, 0, self.Sx, 1, 8, 11)
 end
+
+local OnHit = MonsterOne:addState('OnHit')
+
+function OnHit:enteredState()
+	local x, y = self:getCenter()
+
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris2, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+
+	self.game.player.movable = false 
+	self.game.player:gotoState(nil)
+	self.game.player.timer:after(1, function() self.game.player.movable = true end)
+	self.game.player.dy = -200
+
+	if self.x > self.game.player.x then
+		self.game.player.dx = -200 
+	else 
+		self.game.player.dx = 200
+	end
+
+
+	self.game.camera:screenShake(0.1, 5,5)
+	self.img = dmg_img
+	self.anim = dmg_anim
+		self.anim:gotoFrame(1)
+		self.anim:resume()
+
+	self.timer:after(0.5, function() 
+		self.img = trs_img 
+		self.anim = trs_anim
+		self.anim:gotoFrame(1)
+		self.anim:resume()
+		self.timer:after(2.1, function()
+			MonsterTwo:new(self.game, self.world, self.x, self.y)
+			self:destroy()
+			end)
+	  end)
+end
+
+function OnHit:moveCollision()
+	end
 
 return MonsterOne

@@ -4,11 +4,13 @@ local class = require 'lib.middleclass'
 
 local Floor = class('Floor', Entity)
 
-local width, height = 100000, 1000 
+
+local width, height = 16, 16
 
 function Floor:initialize(world, x, y)
-  Entity.initialize(self, world, -50000, y, width, height)
+  Entity.initialize(self, world, x, y, width, height)
   self.world = world
+  self.drawOrder = 5
 end
 
 function Floor:update()

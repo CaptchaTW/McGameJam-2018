@@ -27,4 +27,8 @@ function Entity:applyGravity(dt)
   end
 end
 
+function Entity:getDrawOrder()
+  return self.drawOrder or 10000
+end
+
 return Entity
