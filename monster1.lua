@@ -5,7 +5,7 @@ local anim8 = require 'lib.anim8'
 
 local MonsterOne = class('MonsterOne', Entity)
 
-local width, height = 10, 10
+local width, height = 10, 5
 local friction = 0.00005
 
 local hspeed = 20
@@ -102,8 +102,8 @@ function MonsterOne:update(dt)
 end
 
 function MonsterOne:draw()
-
-	self.anim:draw(self.img, self.x, self.y, 0, self.Sx, 1, 8, 6)
+--	love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
+	self.anim:draw(self.img, self.x+4, self.y, 0, self.Sx, 1, 8, 11)
 end
 
 return MonsterOne

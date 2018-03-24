@@ -117,22 +117,22 @@ function Player:attack()
 
 	if self.attacking then return false end
 
-slash_anim:gotoFrame(1)
-self.timer:after(0.2, function() 
+	slash_anim:gotoFrame(1)
+	self.timer:after(0.2, function() 
 
-	local x, y = self:getCenter()
-	local things, len
-	if self.Sx > 0 then 
-	 	things, len = self.world:queryRect(x, y-9, 16, 12)
-	else
-		things, len = self.world:queryRect(x-16, y-9, 16, 12)
-	end
+		local x, y = self:getCenter()
+		local things, len
+		if self.Sx > 0 then 
+		 	things, len = self.world:queryRect(x, y-9, 16, 12)
+		else
+			things, len = self.world:queryRect(x-16, y-9, 16, 12)
+		end
 
-	for i=1, len do
-	 	if things[i].hit then
-	 		things[i]:hit()
-	 	end
-	end
+		for i=1, len do
+		 	if things[i].hit then
+		 		things[i]:hit()
+		 	end
+		end
 
 
 	end)
