@@ -118,7 +118,7 @@ function Blink:enteredState()
 	for i=0, 64 do 
 
 		self.timer:after(0.05*i, function()
-			Projectile:new(self.world, x, y, 4, 4, 40*math.cos(i*math.pi/12)+ math.random(0,2) - 1, 40*math.sin(i*math.pi/12) + math.random(0,2) - 1, 'mini', self.game)
+			Projectile:new(self.world, x, y-30, 4, 4, 40*math.cos(i*math.pi/12)+ math.random(0,2) - 1, 40*math.sin(i*math.pi/12) + math.random(0,2) - 1, 'mini', self.game)
 		end)
 	end
 

@@ -192,7 +192,7 @@ function Prepare:enteredState()
  			self.dx = - 200
  		end
 	end)
- self.timer:after(math.random(10, 2)/10, function() if not self.dying then self:gotoState('Pause') end end)
+ self.timer:after(math.random(8, 6)/10, function() if not self.dying then self:gotoState('Pause') end end)
 
 end
 
@@ -230,9 +230,9 @@ function OnHit:enteredState()
 	self.game.player.dy = -200
 
 	if self.x > self.game.player.x then
-		self.game.player.dx = -200 
+		self.game.player.dx = -220 
 	else 
-		self.game.player.dx = 200
+		self.game.player.dx = 220
 	end
 
 	self.timer:tween(3.4, self.game.backgroundcolor, {r = 21, g = 18, b = 32}, 'linear')
@@ -251,7 +251,7 @@ function OnHit:enteredState()
 		self.anim:gotoFrame(1)
 		self.anim:resume()
 		self.timer:after(4.2, function()
-			MonsterFour:new(self.game, self.world, self.x+6, self.y-74)
+			MonsterFour:new(self.game, self.world, self.x-50, self.y-74)
 			self:destroy()
 			end)
 	  end)

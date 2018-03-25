@@ -32,6 +32,7 @@ function Projectile:initialize( world, x, y, w, h, dx, dy, type, game)
 	self.timer = Timer()
 	self.type = type
 	self.game = game
+	self.drawOrder = -1
 
 	if self.type == 'lazer' then
 		self.timer:after(0.4, function() self:destroy() self.dying = true end)
