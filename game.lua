@@ -6,7 +6,7 @@ local Floor = require 'floor'
 
 local Player = require 'player'
 local Floor = require 'floor'
-local MonsterOne = require 'monster3'
+local MonsterOne = require 'monster0'
 
 
 require'sound'
@@ -36,19 +36,19 @@ function Game:reset()
   self.player = Player:new(self, self.world, 0,190)
   self.monster1 = require 'monster1'
 	wall_y =0
-	wall_x=-500
+	wall_x=-1000
 	wall_y1=0
-	wall_x1=500
-	while wall_x ~=-676 do
-while wall_y <= 206 do
+	wall_x1=1000
+	while wall_x ~=-1176 do
+while wall_y <= 706 do
 Floor:new(self.world,wall_x,wall_y)
 wall_y = wall_y + 16
 end
 wall_x = wall_x-16
 wall_y =0
 end
-while  wall_x1 ~= 676 do
-while wall_y1 <= 206 do
+while  wall_x1 ~= 1176 do
+while wall_y1 <= 706 do
 Floor:new(self.world,wall_x1,wall_y1)
 wall_y1 = wall_y1 + 16
 end
