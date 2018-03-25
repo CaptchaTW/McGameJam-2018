@@ -22,21 +22,18 @@ local haccel = 500
 
 local jumpSpeed = -200
 
-local img = love.graphics.newImage('sprites/firstform.png')
+local img = love.graphics.newImage('sprites/formzero.png')
 local grid = anim8.newGrid(16, 16, img:getWidth(), img:getHeight())
-local anim = anim8.newAnimation(grid('1-3', 1), 0.3)
+local anim = anim8.newAnimation(grid('1-5', 1), 0.1)
 
-local dmg_img = love.graphics.newImage('sprites/firstformdamaged.png')
-local dmg_grid = anim8.newGrid(20, 16, dmg_img:getWidth(), dmg_img:getHeight())
-local dmg_anim = anim8.newAnimation(dmg_grid(1, '1-5'), 0.1, 'pauseAtEnd')
-
-
-local trs_img = love.graphics.newImage('sprites/firstformtransforming.png')
-local trs_grid = anim8.newGrid(20, 16, trs_img:getWidth(), trs_img:getHeight())
-local trs_anim = anim8.newAnimation(trs_grid(1, '1-7'), 0.3, 'pauseAtEnd')
+local trs_img = love.graphics.newImage('sprites/formzerotransforming.png')
+local trs_grid = anim8.newGrid(18, 16, trs_img:getWidth(), trs_img:getHeight())
+local trs_anim = anim8.newAnimation(trs_grid('1-21', 1), 0.1, 'pauseAtEnd')
 
 function MonsterZero:initialize(game, world, x,y)
   Entity.initialize(self, world, x, y, width, height)
+
+  self.type = typee
 
   self.game = game
   self.img = img 
@@ -175,14 +172,10 @@ function OnHit:enteredState()
 
 
 	self.game.camera:screenShake(0.1, 5,5)
-	self.img = dmg_img
-	self.anim = dmg_anim
-		self.anim:gotoFrame(1)
-		self.anim:resume()
 
 	self.timer:tween(2.1, self.game.backgroundcolor, {r = 116, g = 92, b = 116}, 'linear')
 
-	self.timer:after(0.5, function() 
+	self.timer:after(0, function() 
 		self.img = trs_img 
 		self.anim = trs_anim
 		self.anim:gotoFrame(1)
@@ -190,7 +183,7 @@ function OnHit:enteredState()
 			music1:play()
 		self.anim:resume()
 		self.timer:after(2.1, function()
-			MonsterOne:new(self.game, self.world, self.x, self.y-4)
+			MonsterOne:new(self.game, self.world, self.x, self.y)
 			music:setVolume(1)
 			music1:setLooping(true)
 			self:destroy()

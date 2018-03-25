@@ -4,6 +4,7 @@ local Timer = require 'lib.timer'
 local anim8 = require 'lib.anim8'
 local Stateful = require 'lib.stateful'
 local Debris = require 'debris'
+local Projectile = require 'projectile'
 
 local debris1 = love.graphics.newImage('sprites/debris1.png')
 local debris2 = love.graphics.newImage('sprites/debris2.png')
@@ -46,13 +47,9 @@ function MonsterOne:initialize(game, world, x,y)
   self.world = world
  	self.drawOrder = 2
   self.timer = Timer()
-  self.timer:every(4, function() 
-  	self.leftKey = true 
-  	self.rightKey = false
-  	self.timer:after(2, function()
-  		self.leftKey = false 
-  		self.rightKey = true
-  	end) 
+  self.timer:every(1, function() 
+  	local x, y = self:getCenter()
+  		Projectile:new(self.world, x, y-8, 8, 8,  -100*self.Sx)
   end)
 end
 
@@ -68,13 +65,13 @@ function MonsterOne:applyMovement(dt)
 
 	local dx, dy = self.dx, self.dy
 
-		if self.leftKey then
+		if self.game.player.x < self.x then
 			if dx > -hspeed  then 
 				dx = dx - haccel * dt
 			end
 			self.Sx = 1 
 		end
-		if self.rightKey then
+		if self.game.player.x > self.x then
 			if dx < hspeed  then
 				dx = dx + haccel * dt
 			end
@@ -167,9 +164,9 @@ function OnHit:enteredState()
 	self.game.player.dy = -200
 
 	if self.x > self.game.player.x then
-		self.game.player.dx = -200 
+		self.game.player.dx = -250
 	else 
-		self.game.player.dx = 200
+		self.game.player.dx = 250
 	end
 
 
