@@ -58,6 +58,9 @@ function MonsterFour:AI(dt)
 end
 
 function MonsterFour:hit()
+	if self.hittable then 
+		self:gotoState('OnHit')
+	end
 end
 
 function MonsterFour:applyMovement(dt)
@@ -111,6 +114,14 @@ function Blink:enteredState()
 	self.anim:gotoFrame(1)
 	self.anim:resume()
 	self.hittable = true 
+	local x, y = self:getCenter()
+	for i=0, 64 do 
+
+		self.timer:after(0.05*i, function()
+			Projectile:new(self.world, x, y, 8, 8, 40*math.cos(i*math.pi/12)+ math.random(0,2) - 1, 40*math.sin(i*math.pi/12) + math.random(0,2) - 1)
+		end)
+	end
+
 
 	self.timer:after(3.4, function() self.hittable = false  self:gotoState('Idle') end)
 end
@@ -161,13 +172,24 @@ function OnHit:enteredState()
 	Debris:new(self, self.world, x, y, debris3, 200)
 	Debris:new(self, self.world, x, y, debris3, 200)
 	Debris:new(self, self.world, x, y, debris3, 200)
-
-	Debris:new(self, self.world, self.weakpoint.x, self.weakpoint.y, debris1, 200)
-	Debris:new(self, self.world, self.weakpoint.x, self.weakpoint.y, debris1, 200)
-	Debris:new(self, self.world, self.weakpoint.x, self.weakpoint.y, debris2, 200)
-	Debris:new(self, self.world, self.weakpoint.x, self.weakpoint.y, debris3, 200)
-	Debris:new(self, self.world, self.weakpoint.x, self.weakpoint.y, debris3, 200)
-	Debris:new(self, self.world, self.weakpoint.x, self.weakpoint.y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris2, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris2, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris2, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
 
 	self.game.player.movable = false 
 	self.game.player:gotoState(nil)
@@ -180,22 +202,24 @@ function OnHit:enteredState()
 		self.game.player.dx = 200
 	end
 
+	self.game.camera:screenShake(5, 5,5)
 
-	self.game.camera:screenShake(0.1, 5,5)
-
+	self.timer:after(3, function() self.game:gotoState('End') end)
 		self.dying = true
 
-	self.timer:after(0.5, function() 
-		self.img = trs_img 
-		self.anim = trs_anim
-		self.dx = 0
-		self.Oy = 41
-		self.anim:gotoFrame(1)
-		self.anim:resume()
-		self.timer:after(3.4, function()
-			self:destroy()
-			end)
-	  end)
+end
+
+function OnHit:update(dt)
+	self.particles:update(dt)
+	self.timer:update(dt)
+	self:AI(dt)
+	self:applyGravity(dt)
+	self:applyMovement(dt)
+	self.anim:update(dt)
+	local x,y = self:getCenter()
+	Debris:new(self, self.world, x, y, debris1, 200)
+	Debris:new(self, self.world, x, y, debris2, 200)
+	Debris:new(self, self.world, x, y, debris3, 200)
 end
 
 return MonsterFour
