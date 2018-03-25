@@ -144,6 +144,7 @@ end
 local OnHit = MonsterZero:addState('OnHit')
 
 function OnHit:enteredState()
+	hit:play()
 	local x, y = self:getCenter()
 		
 	music:setVolume(0.8)	

@@ -50,7 +50,7 @@ function MonsterOne:initialize(game, world, x,y)
   self.timer:every(2, function() 
   	if not self.dying then 
   		local x, y = self:getCenter()
-  		Projectile:new(self.world, x, y-8, 8, 8,  -100*self.Sx)
+  		Projectile:new(self.world, x, y-12, 8, 8,  -100*self.Sx)
   	end
   end)
 end
@@ -144,6 +144,7 @@ end
 local OnHit = MonsterOne:addState('OnHit')
 
 function OnHit:enteredState()
+	hit:play()
 	local x, y = self:getCenter()
 		
 	self.dying = true

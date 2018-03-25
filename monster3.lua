@@ -206,6 +206,7 @@ end
 local OnHit = MonsterThree:addState('OnHit')
 
 function OnHit:enteredState()
+	hit:play()
 	local x, y = self:getCenter()
 music3:setVolume(0.8)	
 	music3:setVolume(0.7)	
