@@ -108,6 +108,7 @@ local Blink = MonsterFour:addState('Blink')
 
 function Blink:enteredState()
 	eye:play()
+	thingies:play()
 
 	self.img = img 
 	self.anim = anim
@@ -167,7 +168,7 @@ local OnHit = MonsterFour:addState('OnHit')
 
 function OnHit:enteredState()
 	local x, y = self:getCenter()
-music4:setVolume(0.8)	
+    music4:setVolume(0.8)	
 	music4:setVolume(0.7)	
 	music4:setVolume(0.6)	
 	music4:setVolume(0.5)	
