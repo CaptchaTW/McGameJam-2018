@@ -62,6 +62,7 @@ function Player:initialize(game, world, x,y)
 	self.movable = true
 	self.particles = Particles:new(self.x, self.y)
 	self.drawOrder = 0
+	
 end
 
 
