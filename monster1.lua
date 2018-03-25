@@ -47,9 +47,11 @@ function MonsterOne:initialize(game, world, x,y)
   self.world = world
  	self.drawOrder = 2
   self.timer = Timer()
-  self.timer:every(1, function() 
-  	local x, y = self:getCenter()
+  self.timer:every(2, function() 
+  	if not self.dying then 
+  		local x, y = self:getCenter()
   		Projectile:new(self.world, x, y-8, 8, 8,  -100*self.Sx)
+  	end
   end)
 end
 
