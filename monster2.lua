@@ -210,6 +210,7 @@ end
 local OnHit = MonsterTwo:addState('OnHit')
 
 function OnHit:enteredState()
+	hit:play()
 	local x, y = self:getCenter()
 music2:setVolume(0.8)	
 	music2:setVolume(0.7)	
