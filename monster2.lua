@@ -51,6 +51,9 @@ function MonsterTwo:initialize(game, world, x,y)
  	self.dx = 0
  	self:gotoState('Prepare')
  	self.Sy = 1
+ 	local x, y = self:getCenter()
+ 			Projectile:new(self.world, x, y-6, 8, 8,  100)
+			Projectile:new(self.world, x, y-6, 8, 8, -100)
 end
 
 function MonsterTwo:AI(dt)
@@ -156,8 +159,8 @@ function Torpedo:checkOnGround(ny, other)
 			self.game.camera:screenShake(0.1, 5,5)
 			local x,y = self:getCenter()
 			Dust:new(self.world, x, y, 'impact')
-			Projectile:new(self.world, x, y, 8, 8,  100)
-			Projectile:new(self.world, x, y, 8, 8, -100)
+			Projectile:new(self.world, x, y-6, 8, 8,  100)
+			Projectile:new(self.world, x, y-6, 8, 8, -100)
 			self.Sy = 1
 	end
 end
@@ -232,9 +235,9 @@ music2:setVolume(0.8)
 	self.game.player.dy = -200
 
 	if self.x > self.game.player.x then
-		self.game.player.dx = -175
+		self.game.player.dx = -200
 	else 
-		self.game.player.dx = 175
+		self.game.player.dx = 200
 	end
 
 
