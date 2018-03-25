@@ -14,17 +14,24 @@ x,y,w,h = -10000, -10000,20000,20000
 
 width, height = 384, 216
 
+local deathimg = love.graphics.newImage('sprites/deathscreen.png')
+
+local loadimg = love.graphics.newImage('sprites/deathscreen.png')
+
 
 local Game = class('Game'):include(Stateful)
 
 function Game:initialize(width, height)
 	love.window.setMode(width, height, {resizable = true})
+  self.camera = Camera:new(self.world, 0,0, width, height)
+   self.camera:resize(love.graphics.getWidth(), love.graphics.getHeight())
 	self:gotoState('Loading')
 end
 
 function Game:reset()
+
 	self.world  = bump.newWorld()
-  self.camera = Camera:new(self.world, 0,0, width, height)
+	self.camera = Camera:new(self.world, 0,0, width, height)
   self.player = Player:new(self, self.world, 0,0)
   self.monster1 = require 'monster1'
 	wall_y =0
@@ -144,16 +151,13 @@ end
 local Loading = Game:addState('Loading')
 	
 function Loading:draw()
-	love.graphics.printf('ad for movement, space for jump, j for roll and k for attack', 0, 0, 384)
+	self.camera:drawscreen(loadimg)
 end
 
 function Loading:keypressed()
 
 	self:reset()
 	self:gotoState(nil)
-end
-
-function Loading:resize()
 end
 
 function Loading:update()
@@ -168,14 +172,12 @@ end
 
 function Death:draw()
 	love.graphics.printf('you died', 130, 50, 384)
+	self.camera:drawscreen(deathimg)
 end
 
 function Death:keypressed()
 	self:reset()
 	self:gotoState(nil)
-end
-
-function Death:resize()
 end
 
 function Death:update()
@@ -196,9 +198,6 @@ function End:keypressed(key)
 		self:reset()
 		self:gotoState(nil)
 	end
-end
-
-function End:resize()
 end
 
 function End:update()

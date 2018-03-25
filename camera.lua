@@ -125,15 +125,45 @@ function Camera:draw( entities, lights, debug)
 
 	lg.translate(self.Gx + self.Ox, self.Gy + self.Oy)
 	
+	if self.world then 
+		local visibleThings, len = self.world:queryRect(x,y,w,h)
+			table.sort(visibleThings, sortByDrawOrder)
 
-	local visibleThings, len = self.world:queryRect(x,y,w,h)
-		table.sort(visibleThings, sortByDrawOrder)
-
-  for i=1, len do
-    visibleThings[i]:draw(dt)
-  end
+	  for i=1, len do
+	    visibleThings[i]:draw(dt)
+	  end
+	end
 
   lg.pop()
+
+	-- Draw canvas at 0,0; this fixes scissoring issues
+	-- Map is scaled to correct scale so the right section is shown
+	lg.push()
+	lg.origin()
+	lg.translate(self.Wx, self.Wy)
+	lg.scale(self.WScale or 1, self.WScale or 1)
+	lg.setCanvas(current_canvas)
+	lg.draw(tempcanvas)
+
+	lg.pop()
+
+end
+
+function Camera:drawscreen(img)
+	lg = love.graphics
+	local current_canvas = lg.getCanvas()
+
+	lg.setCanvas(tempcanvas)
+	lg.clear()
+	lg.setBlendMode("alpha")
+	-- Scale map to 1.0 to draw onto canvas, this fixes tearing issues
+	-- Map is translated to correct position so the right section is drawn
+	lg.push()
+
+	love.graphics.draw(img, 0, 0)
+
+
+	lg.pop()
 
 	-- Draw canvas at 0,0; this fixes scissoring issues
 	-- Map is scaled to correct scale so the right section is shown
