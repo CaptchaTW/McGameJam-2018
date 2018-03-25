@@ -173,7 +173,7 @@ function OnHit:enteredState()
 
 	self.game.camera:screenShake(0.1, 5,5)
 
-	self.timer:tween(2.1, self.game.backgroundcolor, {r = 116, g = 92, b = 116}, 'linear')
+	self.timer:tween(2.1, self.game.backgroundcolor, {r = 125, g = 123, b = 143}, 'linear')
 
 	self.timer:after(0, function() 
 		self.img = trs_img 

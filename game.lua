@@ -33,7 +33,7 @@ function Game:reset()
 	death:stop()
 	self.world  = bump.newWorld()
 	self.camera = Camera:new(self.world, 0,0, width, height)
-  self.player = Player:new(self, self.world, 0,0)
+  self.player = Player:new(self, self.world, 0,190)
   self.monster1 = require 'monster1'
 	wall_y =0
 	wall_x=-500

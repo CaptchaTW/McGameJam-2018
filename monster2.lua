@@ -231,9 +231,9 @@ music1:setVolume(0.8)
 	self.game.player.dy = -200
 
 	if self.x > self.game.player.x then
-		self.game.player.dx = -250
+		self.game.player.dx = -175
 	else 
-		self.game.player.dx = 250
+		self.game.player.dx = 175
 	end
 
 
@@ -245,7 +245,7 @@ music1:setVolume(0.8)
 
 		self.dying = true
 
-		self.timer:tween(3.4, self.game.backgroundcolor, {r = 21, g = 18, b = 32}, 'linear')
+		self.timer:tween(3.4, self.game.backgroundcolor, {r = 51, g = 41, b = 57}, 'linear')
 
 
 	self.timer:after(0, function() 

@@ -235,6 +235,8 @@ function OnHit:enteredState()
 		self.game.player.dx = 200
 	end
 
+	self.timer:tween(3.4, self.game.backgroundcolor, {r = 21, g = 18, b = 32}, 'linear')
+
 
 	self.game.camera:screenShake(0.1, 5,5)
 

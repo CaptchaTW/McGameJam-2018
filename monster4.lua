@@ -49,7 +49,6 @@ function MonsterFour:initialize(game, world, x,y)
  	self.dx = 0
  	self.Sy = 1
  	local x, y = self:getCenter()
- 	self.weakpoint = Weakpoint:new(self.world, self, x, y, 8, 8)
  	self:gotoState('Blink')
 end
 
@@ -89,7 +88,6 @@ function MonsterFour:update(dt)
 end
 
 function MonsterFour:draw()
- 	love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
 	self.particles:draw()
 	self.anim:draw(self.img, self.x+5, self.y, 0, self.Sx, self.Sy,32, 0)
 end

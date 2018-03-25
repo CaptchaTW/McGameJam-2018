@@ -146,6 +146,7 @@ local OnHit = MonsterOne:addState('OnHit')
 function OnHit:enteredState()
 	local x, y = self:getCenter()
 		
+	self.dying = true
 	music:setVolume(0.8)	
 	music:setVolume(0.7)	
 	music:setVolume(0.6)	
@@ -166,9 +167,9 @@ function OnHit:enteredState()
 	self.game.player.dy = -200
 
 	if self.x > self.game.player.x then
-		self.game.player.dx = -250
+		self.game.player.dx = -150
 	else 
-		self.game.player.dx = 250
+		self.game.player.dx = 150
 	end
 
 
