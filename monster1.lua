@@ -38,7 +38,7 @@ local trs_anim = anim8.newAnimation(trs_grid(1, '1-7'), 0.3, 'pauseAtEnd')
 
 function MonsterOne:initialize(game, world, x,y)
   Entity.initialize(self, world, x, y, width, height)
-
+  
   self.game = game
   self.img = img 
   self.anim = anim
@@ -147,13 +147,13 @@ function OnHit:enteredState()
 	local x, y = self:getCenter()
 		
 	self.dying = true
-	music:setVolume(0.8)	
-	music:setVolume(0.7)	
-	music:setVolume(0.6)	
-	music:setVolume(0.5)	
-	music:setVolume(0.4)	
-	music:setVolume(0.3)	
-	music:setVolume(0.2)	
+	music1:setVolume(0.8)	
+	music1:setVolume(0.7)	
+	music1:setVolume(0.6)	
+	music1:setVolume(0.5)	
+	music1:setVolume(0.4)	
+	music1:setVolume(0.3)	
+	music1:setVolume(0.2)	
 	Debris:new(self, self.world, x, y, debris1, 200)
 	Debris:new(self, self.world, x, y, debris1, 200)
 	Debris:new(self, self.world, x, y, debris2, 200)
@@ -185,13 +185,14 @@ function OnHit:enteredState()
 		self.img = trs_img 
 		self.anim = trs_anim
 		self.anim:gotoFrame(1)
-		music:stop()
-			music1:play()
+		
 		self.anim:resume()
 		self.timer:after(2.1, function()
 			MonsterTwo:new(self.game, self.world, self.x, self.y-16)
-			music:setVolume(1)
-			music1:setLooping(true)
+		music1:stop()
+music1:setVolume(1)
+music2:play()
+music2:setLooping()
 			self:destroy()
 			end)
 	  end)

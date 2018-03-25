@@ -32,7 +32,8 @@ local trs_anim = anim8.newAnimation(trs_grid('1-21', 1), 0.1, 'pauseAtEnd')
 
 function MonsterZero:initialize(game, world, x,y)
   Entity.initialize(self, world, x, y, width, height)
-
+music:play()
+music:setLooping()
   self.type = typee
 
   self.game = game
@@ -179,13 +180,14 @@ function OnHit:enteredState()
 		self.img = trs_img 
 		self.anim = trs_anim
 		self.anim:gotoFrame(1)
-		music:stop()
-			music1:play()
+		
 		self.anim:resume()
 		self.timer:after(2.1, function()
 			MonsterOne:new(self.game, self.world, self.x, self.y)
-			music:setVolume(1)
-			music1:setLooping(true)
+			music:stop()
+  music:setVolume(1)
+  music1:play()
+  music1:setLooping(true)
 			self:destroy()
 			end)
 	  end)

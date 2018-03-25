@@ -75,11 +75,9 @@ end
 
   self.monster = MonsterOne:new(self, self.world, 100, 100)
   self.backgroundcolor = {r = 162, g = 221, b = 232}
-  music:play()
-  music:setLooping(true)
+ 
 
-music:play()
-music:setLooping(true)
+
   self.camera:resize(love.graphics.getWidth(), love.graphics.getHeight())
 end
 

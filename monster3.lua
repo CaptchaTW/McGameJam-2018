@@ -207,7 +207,13 @@ local OnHit = MonsterThree:addState('OnHit')
 
 function OnHit:enteredState()
 	local x, y = self:getCenter()
-
+music3:setVolume(0.8)	
+	music3:setVolume(0.7)	
+	music3:setVolume(0.6)	
+	music3:setVolume(0.5)	
+	music3:setVolume(0.4)	
+	music3:setVolume(0.3)	
+	music3:setVolume(0.2)	
 	self.dying = true
 
 	Debris:new(self, self.world, x, y, debris1, 200)
@@ -253,6 +259,9 @@ function OnHit:enteredState()
 		self.timer:after(4.2, function()
 			MonsterFour:new(self.game, self.world, self.x-50, self.y-74)
 			self:destroy()
+			music3:setVolume(1)
+music4:play()
+music4:setLooping()
 			end)
 	  end)
 end

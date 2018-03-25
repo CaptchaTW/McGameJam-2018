@@ -23,7 +23,7 @@ function Floor:draw()
 	love.graphics.rectangle('fill', self.x, self.y, width, height)
 
 	love.graphics.setColor(255, 255, 255)
-if self.y==2 then
+if self.y==222 then
 		love.graphics.draw(tile2,self.x,self.y)
 	else 
 		love.graphics.draw(tile1,self.x,self.y)
