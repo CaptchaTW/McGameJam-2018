@@ -143,7 +143,7 @@ function Player:attack()
 			end
 
 		else
-			things, len = self.world:queryRect(x-16, y-9, 16, 12)
+			things, len = self.world:queryRect(x-32, y-9, 32, 12)
 			for i=1, len do
 		 		if things[i].hit then
 		 			things[i]:hit()
