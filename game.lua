@@ -6,15 +6,8 @@ local Floor = require 'floor'
 
 local Player = require 'player'
 local Floor = require 'floor'
-<<<<<<< HEAD
 local MonsterOne = require 'monster2'
-=======
-<<<<<<< HEAD
-local MonsterOne = require 'monster1'
-=======
-local MonsterOne = require 'monster0'
->>>>>>> d4acfb4676d304a515fb44c522ff3f3ce36bcfcc
->>>>>>> b740889bce82fcf1591af31c4be4d0d7a110db27
+
 
 require'sound'
 x,y,w,h = -10000, -10000,20000,20000
