@@ -25,7 +25,7 @@ local haccel = 500
 local jumpSpeed = -200
 
 local img = love.graphics.newImage('sprites/secondformattack.png')
-local grid = anim8.newGrid(16, 16, img:getWidth(), img:getHeight())
+local grid = anim8.newGrid(20, 16, img:getWidth(), img:getHeight())
 local anim = anim8.newAnimation(grid(1, '1-9'), 0.1, 'pauseAtEnd')
 
 local dmg_img = love.graphics.newImage('sprites/secondformtorpedo.png')

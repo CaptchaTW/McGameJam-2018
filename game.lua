@@ -6,36 +6,35 @@ local Floor = require 'floor'
 
 local Player = require 'player'
 local Floor = require 'floor'
-<<<<<<< HEAD
-local MonsterOne = require 'monster2'
-=======
-<<<<<<< HEAD
-local MonsterOne = require 'monster1'
-=======
 local MonsterOne = require 'monster0'
->>>>>>> d4acfb4676d304a515fb44c522ff3f3ce36bcfcc
->>>>>>> b740889bce82fcf1591af31c4be4d0d7a110db27
+
 
 require'sound'
 x,y,w,h = -10000, -10000,20000,20000
 
 width, height = 384, 216
 
+local deathimg = love.graphics.newImage('sprites/deathscreen.png')
+
+local loadimg = love.graphics.newImage('sprites/deathscreen.png')
+
 
 local Game = class('Game'):include(Stateful)
 
 function Game:initialize(width, height)
 	love.window.setMode(width, height, {resizable = true})
+  self.camera = Camera:new(self.world, 0,0, width, height)
+   self.camera:resize(love.graphics.getWidth(), love.graphics.getHeight())
 	self:gotoState('Loading')
 end
 
 function Game:reset()
+
+	death:stop()
 	self.world  = bump.newWorld()
-  self.camera = Camera:new(self.world, 0,0, width, height)
+	self.camera = Camera:new(self.world, 0,0, width, height)
   self.player = Player:new(self, self.world, 0,0)
-<<<<<<< HEAD
   self.monster1 = require 'monster1'
-=======
 	wall_y =0
 	wall_x=-500
 	wall_y1=0
@@ -57,7 +56,6 @@ wall_x1 =wall_x1+16
 wall_y1=0
 end
   floor_x,floor_y = -1000,222
->>>>>>> b740889bce82fcf1591af31c4be4d0d7a110db27
 
   while floor_x~=1000 do
   		Floor:new(self.world, floor_x, floor_y)
@@ -154,16 +152,13 @@ end
 local Loading = Game:addState('Loading')
 	
 function Loading:draw()
-	love.graphics.printf('ad for movement, space for jump, j for roll and k for attack', 0, 0, 384)
+	self.camera:drawscreen(loadimg)
 end
 
 function Loading:keypressed()
 
 	self:reset()
 	self:gotoState(nil)
-end
-
-function Loading:resize()
 end
 
 function Loading:update()
@@ -178,14 +173,12 @@ end
 
 function Death:draw()
 	love.graphics.printf('you died', 130, 50, 384)
+	self.camera:drawscreen(deathimg)
 end
 
 function Death:keypressed()
 	self:reset()
 	self:gotoState(nil)
-end
-
-function Death:resize()
 end
 
 function Death:update()
@@ -206,9 +199,6 @@ function End:keypressed(key)
 		self:reset()
 		self:gotoState(nil)
 	end
-end
-
-function End:resize()
 end
 
 function End:update()
