@@ -106,6 +106,8 @@ end
 local Blink = MonsterFour:addState('Blink')
 
 function Blink:enteredState()
+	eye:play()
+
 	self.img = img 
 	self.anim = anim
 	self.anim:gotoFrame(1)
