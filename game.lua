@@ -23,6 +23,7 @@ function Game:initialize(width, height)
 end
 
 function Game:reset()
+	death:stop()
 	self.world  = bump.newWorld()
   self.camera = Camera:new(self.world, 0,0, width, height)
   self.player = Player:new(self, self.world, 0,0)
