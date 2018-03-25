@@ -14,7 +14,7 @@ death = love.audio.newSource("death.mp3")
 miss = love.audio.newSource("miss.mp3")
 hit = love.audio.newSource("hitsound.mp3")
 thingies = love.audio.newSource("thingies.mp3")
-slide = love.audio.newSource("slide.mp3")
+
 
 
 
