@@ -119,6 +119,8 @@ end
 local Attack = MonsterFour:addState('Attack')
 
 function Attack:enteredState()
+	attack4:play()
+
 		self.img = dmg_img 
 	self.anim = dmg_anim
 	self.anim:gotoFrame(1)

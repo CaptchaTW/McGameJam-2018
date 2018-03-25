@@ -6,6 +6,7 @@ jumpsound = love.audio.newSource("jump1.wav")
 roll = love.audio.newSource("roll.mp3")
 laser = love.audio.newSource("laser.mp3")
 splatter = love.audio.newSource("splatter.mp3")
+attack4 = love.audio.newSource("boss4attack.mp3")
 
 
 
