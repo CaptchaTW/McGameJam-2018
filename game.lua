@@ -139,6 +139,7 @@ end
 local Death = Game:addState('Death')
 	
 function Death:enteredState()
+	death:play()
 	love.graphics.setBackgroundColor(0, 0, 0)
 end
 
