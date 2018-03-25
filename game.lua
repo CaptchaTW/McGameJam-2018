@@ -16,7 +16,7 @@ width, height = 384, 216
 
 local deathimg = love.graphics.newImage('sprites/deathscreen.png')
 
-local loadimg = love.graphics.newImage('sprites/titlescreen.png')
+local loadimg = love.graphics.newImage('sprites/title screen.png')
 
 
 local Game = class('Game'):include(Stateful)
