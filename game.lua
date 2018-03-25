@@ -1,12 +1,16 @@
 local class = require 'lib.middleclass'
 local bump = require 'lib.bump'
 local Camera = require 'camera'
-
+local Stateful = require 'lib.stateful'
 local Floor = require 'floor'
 
 local Player = require 'player'
 local Floor = require 'floor'
+<<<<<<< HEAD
 local MonsterOne = require 'monster1'
+=======
+local MonsterOne = require 'monster0'
+>>>>>>> d4acfb4676d304a515fb44c522ff3f3ce36bcfcc
 
 require'sound'
 x,y,w,h = -10000, -10000,20000,20000
@@ -14,11 +18,11 @@ x,y,w,h = -10000, -10000,20000,20000
 width, height = 384, 216
 
 
-local Game = class('Game')
+local Game = class('Game'):include(Stateful)
 
 function Game:initialize(width, height)
 	love.window.setMode(width, height, {resizable = true})
-	self:reset()
+	self:gotoState('Loading')
 end
 
 function Game:reset()
@@ -131,5 +135,76 @@ end
 function Game:keyreleased(key)
 	self.player:keyreleased(key)
 end
+
+
+
+
+
+
+
+
+local Loading = Game:addState('Loading')
+	
+function Loading:draw()
+	love.graphics.printf('ad for movement, space for jump, j for roll and k for attack', 0, 0, 384)
+end
+
+function Loading:keypressed()
+
+	self:reset()
+	self:gotoState(nil)
+end
+
+function Loading:resize()
+end
+
+function Loading:update()
+end
+
+local Death = Game:addState('Death')
+	
+function Death:enteredState()
+	death:play()
+	love.graphics.setBackgroundColor(0, 0, 0)
+end
+
+function Death:draw()
+	love.graphics.printf('you died', 130, 50, 384)
+end
+
+function Death:keypressed()
+	self:reset()
+	self:gotoState(nil)
+end
+
+function Death:resize()
+end
+
+function Death:update()
+end
+
+local End = Game:addState('End')
+	
+function End:enteredState()
+	love.graphics.setBackgroundColor(0, 0, 0)
+end
+
+function End:draw()
+	love.graphics.printf('Congrats', 130, 50, 384)
+end
+
+function End:keypressed(key)
+	if key == 'y' then 
+		self:reset()
+		self:gotoState(nil)
+	end
+end
+
+function End:resize()
+end
+
+function End:update()
+end
+
 
 return Game

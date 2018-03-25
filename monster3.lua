@@ -240,7 +240,7 @@ function OnHit:enteredState()
 
 		self.dying = true
 
-	self.timer:after(0.5, function() 
+	self.timer:after(0, function() 
 		self.img = trs_img 
 		self.anim = trs_anim
 		self.dx = 0
@@ -249,7 +249,7 @@ function OnHit:enteredState()
 		self.anim:gotoFrame(1)
 		self.anim:resume()
 		self.timer:after(4.2, function()
-			MonsterFour:new(self.game, self.world, self.x-3, self.y-74)
+			MonsterFour:new(self.game, self.world, self.x+6, self.y-74)
 			self:destroy()
 			end)
 	  end)
