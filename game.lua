@@ -6,7 +6,7 @@ local Floor = require 'floor'
 
 local Player = require 'player'
 local Floor = require 'floor'
-local MonsterOne = require 'monster0'
+local MonsterOne = require 'monster2'
 
 require'sound'
 x,y,w,h = -10000, -10000,20000,20000
@@ -25,6 +25,7 @@ function Game:reset()
 	self.world  = bump.newWorld()
   self.camera = Camera:new(self.world, 0,0, width, height)
   self.player = Player:new(self, self.world, 0,0)
+  self.monster1 = require 'monster1'
 
   floor_x,floor_y = -10000,222
 

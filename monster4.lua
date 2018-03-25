@@ -31,7 +31,7 @@ local anim = anim8.newAnimation(grid(1, '9-1', 1, '1-9'), 0.2, 'pauseAtEnd')
 
 local dmg_img = love.graphics.newImage('sprites/fourthformcrouch.png')
 local dmg_grid = anim8.newGrid(128, 128, dmg_img:getWidth(), dmg_img:getHeight())
-local dmg_anim = anim8.newAnimation(dmg_grid('1-6', 1), 0.1, 'pauseAtEnd')
+local dmg_anim = anim8.newAnimation(dmg_grid('1-9', 1), 0.1, 'pauseAtEnd')
 
 local dmg_anim2 = anim8.newAnimation(dmg_grid('6-1', 1), 0.1, 'pauseAtEnd')
 
@@ -120,7 +120,7 @@ function Blink:enteredState()
 	for i=0, 64 do 
 
 		self.timer:after(0.05*i, function()
-			Projectile:new(self.world, x, y, 8, 8, 40*math.cos(i*math.pi/12)+ math.random(0,2) - 1, 40*math.sin(i*math.pi/12) + math.random(0,2) - 1)
+			Projectile:new(self.world, x, y, 4, 4, 40*math.cos(i*math.pi/12)+ math.random(0,2) - 1, 40*math.sin(i*math.pi/12) + math.random(0,2) - 1, 'mini', self.game)
 		end)
 	end
 

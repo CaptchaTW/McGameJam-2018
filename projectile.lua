@@ -14,10 +14,14 @@ local vinegrid = anim8.newGrid(32, 128, vineimg:getWidth(), vineimg:getHeight())
 local img = love.graphics.newImage('sprites/secondformimpactwave.png')
 local grid = anim8.newGrid(16, 16, img:getWidth(), img:getHeight())
 
+
+local img2 = love.graphics.newImage('sprites/formzero.png')
+local grid2 = anim8.newGrid(16, 16, img2:getWidth(), img2:getHeight())
+
 local Projectile = class ("Projectile", Entity)
 
 
-function Projectile:initialize( world, x, y, w, h, dx, dy, type)
+function Projectile:initialize( world, x, y, w, h, dx, dy, type, game)
   Entity.initialize(self, world, x, y, w, h)
 	self.x = x 
 	self.y = y
@@ -27,6 +31,7 @@ function Projectile:initialize( world, x, y, w, h, dx, dy, type)
 	self.projectile = true
 	self.timer = Timer()
 	self.type = type
+	self.game = game
 
 	if self.type == 'lazer' then
 		self.timer:after(0.4, function() self:destroy() self.dying = true end)
@@ -38,6 +43,8 @@ function Projectile:initialize( world, x, y, w, h, dx, dy, type)
 		self.timer:after(0.2, function() self.damaging = true self.passable = true end)
 		self.timer:after(0.8, function() self.damaging = false self.passable = false end)
 		self.timer:after(1.1, function() self:destroy() self.dying = true end)
+	elseif self.type == 'mini' then 
+		self.anim = anim8.newAnimation(grid2('1-5', 1), 0.1)
 	else
 		self.anim = anim8.newAnimation(grid('1-5', 1), 0.1, 'pauseAtEnd')
 		if self.dx > 0 then 
@@ -78,14 +85,26 @@ function Projectile:update(dt)
 	if self.anim then self.anim:update(dt) end
 end
 
+function Projectile:hit()
+	if self.type == 'mini' then 
+		self.game.monster1:new(self.game, self.world, self.x, self.y)
+		self.dying = true
+		self:destroy()
+	end
+end
+
 function Projectile:draw(debug)
 
 	if self.type == 'lazer' then 
 		self.anim:draw(lazerimg, self.x, self.y-30)
 	elseif self.type == 'vine' then
 		self.anim:draw(vineimg, self.x-18, self.y)
+	elseif self.type == 'mini' then 
+		self.anim:draw(img2, self.x-6, self.y-11)
+
 	else
 		self.anim:draw(img, self.x, self.y, 0, self.Sx, 1)
+		love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
 	end
 
 end
