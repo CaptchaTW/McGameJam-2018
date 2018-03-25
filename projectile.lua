@@ -103,8 +103,12 @@ function Projectile:draw(debug)
 		self.anim:draw(img2, self.x-6, self.y-11)
 
 	else
-		self.anim:draw(img, self.x, self.y, 0, self.Sx, 1)
-		love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
+		if self.dx >0 then 
+			self.anim:draw(img, self.x, self.y, 0, self.Sx, 1, 5, 0)
+		else
+			self.anim:draw(img, self.x, self.y, 0, self.Sx, 1,12, 0)
+		end
+
 	end
 
 end
