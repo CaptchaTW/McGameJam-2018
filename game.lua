@@ -26,15 +26,24 @@ function Game:reset()
   self.camera = Camera:new(self.world, 0,0, width, height)
   self.player = Player:new(self, self.world, 0,0)
 	wall_y =0
+	wall_x=-500
 	wall_y1=0
-while wall_y <= 222 do
-Floor:new(self.world,-500,wall_y)
+	wall_x1=500
+	while wall_x ~=-676 do
+while wall_y <= 206 do
+Floor:new(self.world,wall_x,wall_y)
 wall_y = wall_y + 16
 end
-
-while wall_y1 <= 700 do
-Floor:new(self.world,500,wall_y1)
+wall_x = wall_x-16
+wall_y =0
+end
+while  wall_x1 ~= 676 do
+while wall_y1 <= 206 do
+Floor:new(self.world,wall_x1,wall_y1)
 wall_y1 = wall_y1 + 16
+end
+wall_x1 =wall_x1+16
+wall_y1=0
 end
   floor_x,floor_y = -1000,222
 
