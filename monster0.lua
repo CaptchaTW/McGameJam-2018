@@ -33,7 +33,7 @@ local trs_anim = anim8.newAnimation(trs_grid('1-21', 1), 0.1, 'pauseAtEnd')
 function MonsterZero:initialize(game, world, x,y)
   Entity.initialize(self, world, x, y, width, height)
 music:play()
-music:setLooping()
+music:setLooping(true)
   self.type = typee
 
   self.game = game

@@ -264,7 +264,7 @@ music2:setVolume(0.8)
 			music2:stop()
 music2:setVolume(1)
 music3:play()
-music3:setLooping()
+music3:setLooping(true)
 			
 			self:destroy()
 			end)
