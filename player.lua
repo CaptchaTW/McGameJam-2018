@@ -41,13 +41,13 @@ local jumpEndSpeed = -20
 	local run_grid = anim8.newGrid(16, 18, run_img:getWidth(), run_img:getHeight())
 	local roll_grid = anim8.newGrid(16, 18, roll_img:getWidth(), roll_img:getHeight())
 	local jump_grid = anim8.newGrid(16, 18, jump_img:getWidth(), jump_img:getHeight())
-	local slash_grid = anim8.newGrid(16, 16, slash_img:getWidth(), slash_img:getHeight())
+	local slash_grid = anim8.newGrid(32, 16, slash_img:getWidth(), slash_img:getHeight())
 
 	local idle_anim = anim8.newAnimation(idle_grid(1, 1), 1, "pauseAtEnd")
 	local run_anim = anim8.newAnimation(run_grid(1, '1-7'), 0.1)
 	local roll_anim = anim8.newAnimation(roll_grid('1-5', 1), 0.1)
 	local jump_anim = anim8.newAnimation(jump_grid(1, '1-5'), 0.15, "pauseAtEnd")
-	local slash_anim = anim8.newAnimation(slash_grid('1-4', 1), 0.1)
+	local slash_anim = anim8.newAnimation(slash_grid('1-3', 1), 0.1)
 	local slash_anim2 = anim8.newAnimation(slash_grid('1-4', 2), 0.1)
 
 function Player:initialize(game, world, x,y)
@@ -156,7 +156,7 @@ function Player:attack()
 		local x, y = self:getCenter()
 		local things, len
 		if self.Sx > 0 then 
-		 	things, len = self.world:queryRect(x, y-9, 16, 12)
+		 	things, len = self.world:queryRect(x, y-9, 32, 12)
 		 	for i=1, len do
 		 		if things[i].hit then
 		 			things[i]:hit()
@@ -164,7 +164,7 @@ function Player:attack()
 			end
 
 		else
-			things, len = self.world:queryRect(x-16, y-9, 16, 12)
+			things, len = self.world:queryRect(x-32, y-9, 32, 12)
 			for i=1, len do
 		 		if things[i].hit then
 		 			things[i]:hit()
@@ -174,12 +174,12 @@ function Player:attack()
 
 	end)
 
-	self.timer:after(0.4, function() 
+	self.timer:after(0.3, function() 
 
 		local x, y = self:getCenter()
 		local things, len
 		if self.Sx > 0 then 
-		 	things, len = self.world:queryRect(x, y-9, 16, 12)
+		 	things, len = self.world:queryRect(x, y-9, 32, 12)
 		 	for i=1, len do
 		 		if things[i].hit then
 		 			things[i]:hit()
@@ -187,7 +187,7 @@ function Player:attack()
 			end
 
 		else
-			things, len = self.world:queryRect(x-16, y-9, 16, 12)
+			things, len = self.world:queryRect(x-32, y-9, 32, 12)
 			for i=1, len do
 		 		if things[i].hit then
 		 			things[i]:hit()
@@ -200,7 +200,7 @@ function Player:attack()
 
 
 	self.attacking = true 
-	self.timer:after(0.4, function() self.attacking = false end)
+	self.timer:after(0.3, function() self.attacking = false end)
 end
 
 function Player:keyreleased(key)

@@ -240,7 +240,7 @@ function OnHit:enteredState()
 
 		self.dying = true
 
-	self.timer:after(0.5, function() 
+	self.timer:after(0, function() 
 		self.img = trs_img 
 		self.anim = trs_anim
 		self.dx = 0

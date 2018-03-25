@@ -231,9 +231,9 @@ music1:setVolume(0.8)
 	self.game.player.dy = -200
 
 	if self.x > self.game.player.x then
-		self.game.player.dx = -200 
+		self.game.player.dx = -250
 	else 
-		self.game.player.dx = 200
+		self.game.player.dx = 250
 	end
 
 
@@ -248,7 +248,7 @@ music1:setVolume(0.8)
 		self.timer:tween(3.4, self.game.backgroundcolor, {r = 21, g = 18, b = 32}, 'linear')
 
 
-	self.timer:after(0.5, function() 
+	self.timer:after(0, function() 
 		self.img = trs_img 
 		self.anim = trs_anim
 		self.dx = 0
