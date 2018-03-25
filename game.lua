@@ -6,7 +6,7 @@ local Floor = require 'floor'
 
 local Player = require 'player'
 local Floor = require 'floor'
-local MonsterOne = require 'monster0'
+local MonsterOne = require 'monster3'
 
 
 require'sound'
