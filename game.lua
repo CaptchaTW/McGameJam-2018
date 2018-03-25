@@ -26,9 +26,7 @@ function Game:reset()
 	self.world  = bump.newWorld()
   self.camera = Camera:new(self.world, 0,0, width, height)
   self.player = Player:new(self, self.world, 0,0)
-<<<<<<< HEAD
   self.monster1 = require 'monster1'
-=======
 	wall_y =0
 	wall_x=-500
 	wall_y1=0
@@ -50,7 +48,6 @@ wall_x1 =wall_x1+16
 wall_y1=0
 end
   floor_x,floor_y = -1000,222
->>>>>>> b740889bce82fcf1591af31c4be4d0d7a110db27
 
   while floor_x~=1000 do
   		Floor:new(self.world, floor_x, floor_y)
